@@ -10,4 +10,10 @@ namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType;
 
 class SyndicationTypeCollection
 {
+    /**
+     * SyndicationTypeCollection constructor.
+     */
+    public function __construct(iterable $types)
+    {
+    }
 }

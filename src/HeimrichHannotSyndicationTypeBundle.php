@@ -8,8 +8,13 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle;
 
+use HeimrichHannot\SyndicationTypeBundle\DependencyInjection\SyndicationTypeExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class HeimrichHannotSyndicationTypeBundle extends Bundle
 {
+    public function getContainerExtension()
+    {
+        return new SyndicationTypeExtension();
+    }
 }

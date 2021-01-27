@@ -27,6 +27,11 @@ class FacebookSyndicationType implements SyndicationTypeInterface
         $this->linkFactory = $linkFactory;
     }
 
+    public static function getType(): string
+    {
+        return 'facebook';
+    }
+
     public function generate(): SyndicationLink
     {
         return $this->linkFactory->create(['external'], 'http://facebook.com', []);

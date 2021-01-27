@@ -11,3 +11,5 @@ services:
   HeimrichHannot\SyndicationTypeBundle\SyndicationType\Concrete\:
     resource: '../../SyndicationType/Concrete'
     tags: ['huh.syndication_type.type']
+
+  HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator: ~
