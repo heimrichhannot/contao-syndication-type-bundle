@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    autowire: true
+
+  HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection:
+    arguments:
+      - !tagged huh.syndication_type.type
+
+  HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory: ~
+
+  HeimrichHannot\SyndicationTypeBundle\SyndicationType\Concrete\:
+    resource: '../../SyndicationType/Concrete'
+    tags: ['huh.syndication_type.type']
