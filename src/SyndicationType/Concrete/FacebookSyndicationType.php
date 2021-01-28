@@ -11,10 +11,10 @@ namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType\Concrete;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory;
-use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeInterface;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationType\AbstractSyndicationType;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class FacebookSyndicationType implements SyndicationTypeInterface
+class FacebookSyndicationType extends AbstractSyndicationType
 {
     /**
      * @var SyndicationLinkFactory
@@ -53,10 +53,5 @@ class FacebookSyndicationType implements SyndicationTypeInterface
                 'onclick' => 'window.open(this.href,\'\',\'width=640,height=380,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false',
             ]
         );
-    }
-
-    public function isEnabledByContext(SyndicationLinkContext $context): bool
-    {
-        return true === (bool) $context->getConfiguration()['syndicationFacebook'];
     }
 }

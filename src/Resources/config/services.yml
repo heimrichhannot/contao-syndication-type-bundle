@@ -7,10 +7,19 @@ services:
       - !tagged huh.syndication_type.type
 
   HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory: ~
-
-  HeimrichHannot\SyndicationTypeBundle\SyndicationType\Concrete\:
-    resource: '../../SyndicationType/Concrete'
-    tags: ['huh.syndication_type.type']
-
   HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator: ~
   HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer: ~
+  HeimrichHannot\SyndicationTypeBundle\Dca\DcaFieldProvider: ~
+
+  HeimrichHannot\SyndicationTypeBundle\EventListener\Contao\:
+    resource: '../../EventListener/Contao/*'
+    public: true
+
+  HeimrichHannot\SyndicationTypeBundle\SyndicationType\Concrete\:
+    resource: '../../SyndicationType/Concrete/*'
+    tags: [ 'huh.syndication_type.type' ]
+
+  HeimrichHannot\SyndicationTypeBundle\ConfigElementType\:
+    resource: '../../ConfigElementType/*'
+    tags: [ 'huh.reader.config_element_type' ]
+

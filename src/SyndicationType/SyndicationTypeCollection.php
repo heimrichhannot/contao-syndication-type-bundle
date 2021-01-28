@@ -18,6 +18,10 @@ class SyndicationTypeCollection
      * @var SyndicationTypeInterface[]
      */
     protected $types;
+    /**
+     * @var array
+     */
+    protected $categories;
 
     /**
      * SyndicationTypeCollection constructor.
@@ -33,6 +37,8 @@ class SyndicationTypeCollection
     public function getTypes(): array
     {
         if (!$this->types) {
+            $this->types = [];
+
             foreach ($this->typesIterable as $type) {
                 $this->types[$type::getType()] = $type;
             }
@@ -53,5 +59,41 @@ class SyndicationTypeCollection
         }
 
         return null;
+    }
+
+    /**
+     * Return types by given category.
+     *
+     * @return SyndicationTypeInterface[]
+     */
+    public function getTypesByCategory(string $category): array
+    {
+        if (!$this->categories) {
+            $this->categories = [];
+            $types = $this->getTypes();
+
+            foreach ($types as $name => $type) {
+                if (!isset($this->categories[$type->getCategory()])) {
+                    $this->categories[$type->getCategory()] = [];
+                }
+                $this->categories[$type->getCategory()][] = $type;
+            }
+        }
+
+        return isset($this->categories[$category]) ? $this->categories[$category] : [];
+    }
+
+    /**
+     * Return all category types with existing syndication types.
+     *
+     * @return string[]
+     */
+    public function getCategories(): array
+    {
+        $this->getTypesByCategory(AbstractSyndicationType::CATEGORY_SHARE);
+        $categories = array_keys($this->categories);
+        asort($categories);
+
+        return $categories;
     }
 }

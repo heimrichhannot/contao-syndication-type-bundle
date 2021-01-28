@@ -33,4 +33,18 @@ interface SyndicationTypeInterface
      * Return if the syndication link should be generated.
      */
     public function isEnabledByContext(SyndicationLinkContext $context): bool;
+
+    /**
+     * Return the database field to active the syndication type.
+     * Field name should be the keyword "syndication" + the type in camel case, "syndicationFacebook" for example.
+     * Value should be included in the SyndicationLinkContext data array.
+     */
+    public function getActivationField(): string;
+
+    /**
+     * Return the syndication category.
+     *
+     * For supported types, see AbstractSyndicationType categoriy constants.
+     */
+    public function getCategory(): string;
 }
