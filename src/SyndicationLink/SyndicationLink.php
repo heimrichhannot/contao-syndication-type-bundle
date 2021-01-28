@@ -24,14 +24,19 @@ class SyndicationLink implements LinkInterface
      * @var array
      */
     protected $attributes;
+    /**
+     * @var string
+     */
+    protected $content;
 
     /**
      * SyndicationLink constructor.
      */
-    public function __construct(array $rels, string $href, array $attributes)
+    public function __construct(array $rels, string $href, string $content, array $attributes)
     {
         $this->rels = $rels;
         $this->href = $href;
+        $this->content = $content;
         $this->attributes = $attributes;
     }
 
@@ -53,5 +58,10 @@ class SyndicationLink implements LinkInterface
     public function getAttributes()
     {
         return $this->attributes;
+    }
+
+    public function getContent(): string
+    {
+        return $this->content;
     }
 }

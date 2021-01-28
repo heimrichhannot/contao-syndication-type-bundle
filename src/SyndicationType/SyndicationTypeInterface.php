@@ -9,6 +9,7 @@
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType;
 
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
 
 interface SyndicationTypeInterface
 {
@@ -26,10 +27,10 @@ interface SyndicationTypeInterface
     /**
      * Generate the syndication link.
      */
-    public function generate(): SyndicationLink;
+    public function generate(SyndicationLinkContext $context): SyndicationLink;
 
     /**
      * Return if the syndication link should be generated.
      */
-    public function shouldBeApplied(): bool;
+    public function isEnabledByContext(SyndicationLinkContext $context): bool;
 }

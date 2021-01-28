@@ -9,8 +9,10 @@
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType\Concrete;
 
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class FacebookSyndicationType implements SyndicationTypeInterface
 {
@@ -18,13 +20,18 @@ class FacebookSyndicationType implements SyndicationTypeInterface
      * @var SyndicationLinkFactory
      */
     protected $linkFactory;
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
 
     /**
      * FacebookSyndicationType constructor.
      */
-    public function __construct(SyndicationLinkFactory $linkFactory)
+    public function __construct(SyndicationLinkFactory $linkFactory, TranslatorInterface $translator)
     {
         $this->linkFactory = $linkFactory;
+        $this->translator = $translator;
     }
 
     public static function getType(): string
@@ -32,13 +39,24 @@ class FacebookSyndicationType implements SyndicationTypeInterface
         return 'facebook';
     }
 
-    public function generate(): SyndicationLink
+    public function generate(SyndicationLinkContext $context): SyndicationLink
     {
-        return $this->linkFactory->create(['external'], 'http://facebook.com', []);
+        return $this->linkFactory->create(
+            ['external'],
+            sprintf('https://www.facebook.com/sharer/sharer.php?u=%s&t=%s', rawurlencode($context->getUrl()), rawurlencode($context->getTitle())),
+            $this->translator->trans('huh.syndication_type.types.facebook.title'),
+            [
+                'class' => 'facebook',
+                'rel' => 'external nofollow',
+                'title' => $this->translator->trans('huh.syndication_type.types.facebook.title'),
+                'target' => '_blank',
+                'onclick' => 'window.open(this.href,\'\',\'width=640,height=380,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false',
+            ]
+        );
     }
 
-    public function shouldBeApplied(): bool
+    public function isEnabledByContext(SyndicationLinkContext $context): bool
     {
-        return false;
+        return true === (bool) $context->getConfiguration()['syndicationFacebook'];
     }
 }

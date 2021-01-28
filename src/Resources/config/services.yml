@@ -13,3 +13,4 @@ services:
     tags: ['huh.syndication_type.type']
 
   HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator: ~
+  HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer: ~
