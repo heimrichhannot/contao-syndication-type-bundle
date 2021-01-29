@@ -12,6 +12,7 @@ use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementData;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementResult;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
 use HeimrichHannot\HeadBundle\Tag\Meta\MetaDescription;
+use HeimrichHannot\SyndicationTypeBundle\Dca\DcaFieldProvider;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
@@ -35,15 +36,20 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
      * @var SyndicationLinkRenderer
      */
     protected $linkRenderer;
+    /**
+     * @var DcaFieldProvider
+     */
+    protected $dcaFieldProvider;
 
     /**
      * SyndicationConfigElementType constructor.
      */
-    public function __construct(SyndicationTypeCollection $typeCollection, SyndicationLinkProviderGenerator $linkProviderGenerator, SyndicationLinkRenderer $linkRenderer)
+    public function __construct(SyndicationTypeCollection $typeCollection, SyndicationLinkProviderGenerator $linkProviderGenerator, SyndicationLinkRenderer $linkRenderer, DcaFieldProvider $dcaFieldProvider)
     {
         $this->typeCollection = $typeCollection;
         $this->linkProviderGenerator = $linkProviderGenerator;
         $this->linkRenderer = $linkRenderer;
+        $this->dcaFieldProvider = $dcaFieldProvider;
     }
 
     public static function getType(): string
@@ -54,23 +60,7 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
     public function getPalette(string $prependPalette, string $appendPalette): string
     {
         $palette = $prependPalette;
-
-        $categories = $this->typeCollection->getCategories();
-
-        foreach ($categories as $category) {
-            $fields = [];
-            $types = $this->typeCollection->getTypesByCategory($category);
-
-            foreach ($types as $type) {
-                $fields[] = $type->getActivationField();
-            }
-
-            if (empty($fields)) {
-                continue;
-            }
-            $palette .= '{'.$category.'_legend},'.implode(',', $fields).';';
-        }
-
+        $palette .= $this->dcaFieldProvider->getPalette(true);
         $palette .= $appendPalette;
 
         return $palette;

@@ -34,5 +34,10 @@ This bundle brings an extendable syndication framework to contao. Syndication ca
 1. Generate syndication links in your module/content element/controller/eventlistener/etc. with `SyndicationLinkProviderGenerator`. 
 1. Render links with bundled `SyndicationLinkRenderer` or a custom renderer
 
+### Add custom syndication type
+
+1. Create a class implementing `SyndicationTypeInterface` (we recommend extending `AbstractSyndicationType`)
+1. Register service type class as service with `huh.syndication_type.type` service tag
+
 
 
