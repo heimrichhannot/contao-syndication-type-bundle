@@ -26,13 +26,13 @@ class SyndicationLinkProviderGenerator
     }
 
     /**
-     * @param string[] $types a list of syndication types to render links for
+     * @param string[] $syndicationTypes a list of syndication types to render links for
      */
-    public function generate(array $types, SyndicationLinkContext $context): SyndicationLinkProvider
+    public function generate(array $syndicationTypes, SyndicationLinkContext $context): SyndicationLinkProvider
     {
         $links = [];
 
-        foreach ($types as $typeName) {
+        foreach ($syndicationTypes as $typeName) {
             if ($this->collection->hasType($typeName)) {
                 $type = $this->collection->getType($typeName);
 
