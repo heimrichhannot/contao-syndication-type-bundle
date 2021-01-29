@@ -15,7 +15,7 @@ abstract class AbstractSyndicationType implements SyndicationTypeInterface
     const CATEGORY_SHARE = 'share';
     const CATEGORY_EXPORT = 'export';
 
-    public function getActivationField(): string
+    public static function getActivationField(): string
     {
         return 'syndication'.ucfirst(static::getType());
     }

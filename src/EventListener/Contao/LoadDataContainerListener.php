@@ -38,5 +38,7 @@ class LoadDataContainerListener
         $dca = &$GLOBALS['TL_DCA'][$table];
 
         $dca['fields'] = array_merge($dca['fields'] ?: [], $this->dcaFieldProvider->getFields());
+        $dca['subpalettes'] = array_merge($dca['subpalettes'] ?: [], $this->dcaFieldProvider->getSubpalettes());
+        $dca['palettes']['__selector__'] = array_merge($dca['palettes']['__selector__'] ?: [], $this->dcaFieldProvider->getPalettesSelectors());
     }
 }

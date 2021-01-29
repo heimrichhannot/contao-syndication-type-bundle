@@ -39,7 +39,7 @@ interface SyndicationTypeInterface
      * Field name should be the keyword "syndication" + the type in camel case, "syndicationFacebook" for example.
      * Value should be included in the SyndicationLinkContext data array.
      */
-    public function getActivationField(): string;
+    public static function getActivationField(): string;
 
     /**
      * Return the syndication category.

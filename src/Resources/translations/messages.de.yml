@@ -1,3 +1,12 @@
 huh.syndication_type:
   types:
+    email.title: Per E-Mail teilen
     facebook.title: Auf Facebook teilen
+
+  fields:
+    syndicationEmail:
+      name: "E-Mail-Syndikation aktivieren"
+      description: "Aktivieren Sie die Syndikation zur Verbreitung des Beitrags per E-Mail."
+    syndicationFacebook:
+      name: "Facebook-Syndikation aktivieren"
+      description: "Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Facebook."

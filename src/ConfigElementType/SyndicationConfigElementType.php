@@ -17,6 +17,7 @@ use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class SyndicationConfigElementType implements ConfigElementTypeInterface
 {
@@ -40,21 +41,26 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
      * @var DcaFieldProvider
      */
     protected $dcaFieldProvider;
+    /**
+     * @var RequestStack
+     */
+    protected $requestStack;
 
     /**
      * SyndicationConfigElementType constructor.
      */
-    public function __construct(SyndicationTypeCollection $typeCollection, SyndicationLinkProviderGenerator $linkProviderGenerator, SyndicationLinkRenderer $linkRenderer, DcaFieldProvider $dcaFieldProvider)
+    public function __construct(SyndicationTypeCollection $typeCollection, SyndicationLinkProviderGenerator $linkProviderGenerator, SyndicationLinkRenderer $linkRenderer, DcaFieldProvider $dcaFieldProvider, RequestStack $requestStack)
     {
         $this->typeCollection = $typeCollection;
         $this->linkProviderGenerator = $linkProviderGenerator;
         $this->linkRenderer = $linkRenderer;
         $this->dcaFieldProvider = $dcaFieldProvider;
+        $this->requestStack = $requestStack;
     }
 
     public static function getType(): string
     {
-        return 'syndication';
+        return 'syndication_type';
     }
 
     public function getPalette(string $prependPalette, string $appendPalette): string
@@ -74,9 +80,10 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
     {
         $title = $configElementData->getItemData()['headline'];
         $description = $configElementData->getItemData()['teaser'];
+        $url = $this->requestStack->getMasterRequest()->getUri();
 
         $links = $this->linkProviderGenerator->generateFromContext(new SyndicationLinkContext(
-            $title, $description, 'http://google.com', $configElementData->getItemData(), $configElementData->getConfiguration()->row()
+            $title, $description, $url, $configElementData->getItemData(), $configElementData->getConfiguration()->row()
         ));
 
         return new ConfigElementResult(ConfigElementResult::TYPE_FORMATTED_VALUE, $this->linkRenderer->renderProvider($links));
