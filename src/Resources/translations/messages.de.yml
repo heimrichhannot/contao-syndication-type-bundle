@@ -7,15 +7,21 @@ huh.syndication_type:
     syndicationEmail:
       name: "E-Mail-Syndikation aktivieren"
       description: "Aktivieren Sie die Syndikation zur Verbreitung des Beitrags per E-Mail."
-    syndicationEmailSubject:
-      name: "E-Mail Betreff"
-      description: "Geben Sie hier ein Betreff für die E-Mail ein. Sie können die Platzhalter %title% (Titel), %content% (Inhaltsauszug) und %url% (URL) verwenden, welche automatisch ersetzen werden."
+    syndicationEmailAddress:
+      name: "E-Mail Empfänger"
+      description: "Geben Sie hier den Empfänger (E-Mail-Adresse) für die E-Mail ein."
     syndicationEmailBody:
       name: "E-Mail Inhalt"
       description: "Geben Sie hier den Inhalt für die E-Mail ein. Sie können die Platzhalter %title% (Titel), %content% (Inhaltsauszug) und %url% (URL) verwenden, welche automatisch ersetzen werden."
+    syndicationEmailSubject:
+      name: "E-Mail Betreff"
+      description: "Geben Sie hier ein Betreff für die E-Mail ein. Sie können die Platzhalter %title% (Titel), %content% (Inhaltsauszug) und %url% (URL) verwenden, welche automatisch ersetzen werden."
     syndicationFacebook:
       name: "Facebook-Syndikation aktivieren"
       description: "Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Facebook."
+    syndicationFeedbackEmail:
+      name: "Feedback-E-Mail-Syndikaton aktivieren"
+      description: "Aktivieren Sie die Syndikation um Feedback per E-Mail zu aktivieren."
     syndicationTitleField:
       name: "Titel-Feld"
       description: "Wählen Sie hier das Feld aus, welches den Titel (bspw. die Überschrift) für die zu teilendene Entität enthält."

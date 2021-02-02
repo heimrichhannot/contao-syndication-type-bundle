@@ -8,7 +8,6 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType\Concrete;
 
-use Contao\StringUtil;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory;
@@ -42,24 +41,21 @@ class EmailSyndicationType extends AbstractSyndicationType
 
     public function generate(SyndicationLinkContext $context): SyndicationLink
     {
-        $emailData = str_replace(
+        $subject = strip_tags(str_replace(
             ['%title%', '%content%', '%url%'],
             [$context->getTitle(), $context->getContent(), $context->getUrl()],
-            [
-                'subject' => $context->getData()['syndicationEmailSubject'],
-                'body' => $context->getData()['syndicationEmailBody'],
-            ]
-        );
+            $context->getConfiguration()['syndicationEmailSubject']
+        ));
+        $body = strip_tags(str_replace(
+            ['%title%', '%content%', '%url%'],
+            [$context->getTitle(), $context->getContent(), $context->getUrl()],
+            $context->getConfiguration()['syndicationEmailBody']
+        ));
 
-        $href = sprintf('mailto:?subject=%s&body=%s', $emailData['subject'], $emailData['body']);
-
-//        $href = sprintf('mailto:?subject=%s&body=%s',
-//            rawurlencode(StringUtil::decodeEntities($this->translator->trans(
-//                $context->getData()['mailSubjectLabel'], ['%title%' => $context->getTitle(), '%url' => $context->getUrl()])
-//            )),
-//            rawurlencode(StringUtil::decodeEntities($this->translator->trans(
-//                $context->getData()['mailBodyLabel'], ['%title%' => $context->getTitle(), '%url%' => $context->getUrl()])))
-//        );
+        $href = $this->generateMailToLink('', [
+            'subject' => $subject,
+            'body' => $body,
+        ]);
 
         return $this->linkFactory->create(
             ['external', 'application'],
@@ -71,5 +67,20 @@ class EmailSyndicationType extends AbstractSyndicationType
             ],
             $this
         );
+    }
+
+    public function generateMailToLink(string $receiver = '', array $parts = []): string
+    {
+        $link = 'mailto:';
+
+        if (!empty($receiver)) {
+            $link .= $receiver;
+        }
+
+        if (!empty($parts)) {
+            $link .= '?'.http_build_query($parts, '', '&', PHP_QUERY_RFC3986);
+        }
+
+        return $link;
     }
 }

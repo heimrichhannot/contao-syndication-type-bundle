@@ -35,6 +35,7 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
     {
         return [
             'syndicationEmail' => 'syndicationEmailSubject,syndicationEmailBody',
+            'syndicationFeedbackEmail' => 'syndicationEmailAddress,syndicationEmailSubject,syndicationEmailBody',
         ];
     }
 
@@ -45,6 +46,7 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
     {
         return [
             'syndicationEmail',
+            'syndicationFeedbackEmail',
         ];
     }
 
@@ -70,6 +72,21 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
             'eval' => ['tl_class' => 'w50 clr', 'submitOnChange' => true],
             'sql' => "char(1) NOT NULL default ''",
         ];
+        $fields['syndicationFeedbackEmail'] = [
+            'label' => $this->getLabel('syndicationFeedbackEmail'),
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => ['tl_class' => 'w50 clr', 'submitOnChange' => true],
+            'sql' => "char(1) NOT NULL default ''",
+        ];
+        $fields['syndicationEmailAddress'] = [
+            'label' => $this->getLabel('syndicationEmailAddress'),
+            'exclude' => true,
+            'search' => true,
+            'inputType' => 'text',
+            'eval' => ['maxlength' => 64, 'tl_class' => 'w50', 'mandatory' => true],
+            'sql' => "varchar(64) NOT NULL default ''",
+        ];
         $fields['syndicationEmailSubject'] = [
             'label' => $this->getLabel('syndicationEmailSubject'),
             'exclude' => true,
@@ -84,7 +101,7 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
             'exclude' => true,
             'search' => true,
             'inputType' => 'textarea',
-            'eval' => ['maxlength' => 1000, 'tl_class' => 'long clr', 'mandatory' => true, 'rows' => 3],
+            'eval' => ['maxlength' => 1000, 'tl_class' => 'long clr', 'rows' => 3],
             'sql' => 'text NULL',
         ];
 

@@ -9,6 +9,7 @@
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType;
 
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
+use function Symfony\Component\String\u;
 
 abstract class AbstractSyndicationType implements SyndicationTypeInterface
 {
@@ -17,7 +18,7 @@ abstract class AbstractSyndicationType implements SyndicationTypeInterface
 
     public static function getActivationField(): string
     {
-        return 'syndication'.ucfirst(static::getType());
+        return u('syndication '.static::getType())->camel();
     }
 
     public function isEnabledByContext(SyndicationLinkContext $context): bool
