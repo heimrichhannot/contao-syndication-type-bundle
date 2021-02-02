@@ -11,7 +11,7 @@ namespace HeimrichHannot\SyndicationTypeBundle\Dca;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class DcaFieldProvider
+class SyndicationTypeDcaProvider extends AbstractDcaProvider
 {
     /**
      * @var SyndicationTypeCollection
@@ -71,7 +71,7 @@ class DcaFieldProvider
             'sql' => "char(1) NOT NULL default ''",
         ];
         $fields['syndicationEmailSubject'] = [
-            'label' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationEmailSubject'],
+            'label' => $this->getLabel('syndicationEmailSubject'),
             'exclude' => true,
             'search' => true,
             'inputType' => 'text',
@@ -80,7 +80,7 @@ class DcaFieldProvider
         ];
 
         $fields['syndicationEmailBody'] = [
-            'label' => &$GLOBALS['TL_LANG']['tl_page']['syndicationEmailBody'],
+            'label' => $this->getLabel('syndicationEmailBody'),
             'exclude' => true,
             'search' => true,
             'inputType' => 'textarea',
@@ -126,13 +126,5 @@ class DcaFieldProvider
         }
 
         return $palette;
-    }
-
-    public function getLabel(string $field): array
-    {
-        return [
-            $this->translator->trans('huh.syndication_type.fields.'.$field.'.name'),
-            $this->translator->trans('huh.syndication_type.fields.'.$field.'.description'),
-        ];
     }
 }

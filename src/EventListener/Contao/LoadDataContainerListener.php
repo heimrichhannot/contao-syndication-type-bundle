@@ -8,21 +8,27 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\EventListener\Contao;
 
-use HeimrichHannot\SyndicationTypeBundle\Dca\DcaFieldProvider;
+use HeimrichHannot\SyndicationTypeBundle\Dca\ConfigElementTypeDcaProvider;
+use HeimrichHannot\SyndicationTypeBundle\Dca\SyndicationTypeDcaProvider;
 
 class LoadDataContainerListener
 {
     /**
-     * @var DcaFieldProvider
+     * @var SyndicationTypeDcaProvider
      */
-    protected $dcaFieldProvider;
+    protected $syndicationTypeDcaProvider;
+    /**
+     * @var ConfigElementTypeDcaProvider
+     */
+    protected $configElementTypeDcaProvider;
 
     /**
      * LoadDataContainerListener constructor.
      */
-    public function __construct(DcaFieldProvider $dcaFieldProvider)
+    public function __construct(SyndicationTypeDcaProvider $syndicationTypeDcaProvider, ConfigElementTypeDcaProvider $configElementTypeDcaProvider)
     {
-        $this->dcaFieldProvider = $dcaFieldProvider;
+        $this->syndicationTypeDcaProvider = $syndicationTypeDcaProvider;
+        $this->configElementTypeDcaProvider = $configElementTypeDcaProvider;
     }
 
     public function __invoke(string $table): void
@@ -35,10 +41,7 @@ class LoadDataContainerListener
 
     protected function prepareReaderConfigElementTable(string $table)
     {
-        $dca = &$GLOBALS['TL_DCA'][$table];
-
-        $dca['fields'] = array_merge($dca['fields'] ?: [], $this->dcaFieldProvider->getFields());
-        $dca['subpalettes'] = array_merge($dca['subpalettes'] ?: [], $this->dcaFieldProvider->getSubpalettes());
-        $dca['palettes']['__selector__'] = array_merge($dca['palettes']['__selector__'] ?: [], $this->dcaFieldProvider->getPalettesSelectors());
+        $this->configElementTypeDcaProvider->prepareDca($table);
+        $this->syndicationTypeDcaProvider->prepareDca($table);
     }
 }

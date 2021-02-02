@@ -9,7 +9,15 @@ services:
   HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory: ~
   HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator: ~
   HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer: ~
-  HeimrichHannot\SyndicationTypeBundle\Dca\DcaFieldProvider: ~
+
+  HeimrichHannot\SyndicationTypeBundle\Dca\:
+    resource: '../../Dca/*'
+    public: true
+
+  HeimrichHannot\SyndicationTypeBundle\Dca\ConfigElementTypeDcaProvider:
+    public: true
+    calls:
+      - [ setReaderConfigUtil, [ '@?HeimrichHannot\ReaderBundle\Util\ReaderConfigUtil' ] ]
 
   HeimrichHannot\SyndicationTypeBundle\EventListener\Contao\:
     resource: '../../EventListener/Contao/*'

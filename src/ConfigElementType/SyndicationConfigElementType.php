@@ -12,7 +12,7 @@ use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementData;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementResult;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
 use HeimrichHannot\HeadBundle\Tag\Meta\MetaDescription;
-use HeimrichHannot\SyndicationTypeBundle\Dca\DcaFieldProvider;
+use HeimrichHannot\SyndicationTypeBundle\Dca\SyndicationTypeDcaProvider;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
@@ -38,7 +38,7 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
      */
     protected $linkRenderer;
     /**
-     * @var DcaFieldProvider
+     * @var SyndicationTypeDcaProvider
      */
     protected $dcaFieldProvider;
     /**
@@ -49,7 +49,7 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
     /**
      * SyndicationConfigElementType constructor.
      */
-    public function __construct(SyndicationTypeCollection $typeCollection, SyndicationLinkProviderGenerator $linkProviderGenerator, SyndicationLinkRenderer $linkRenderer, DcaFieldProvider $dcaFieldProvider, RequestStack $requestStack)
+    public function __construct(SyndicationTypeCollection $typeCollection, SyndicationLinkProviderGenerator $linkProviderGenerator, SyndicationLinkRenderer $linkRenderer, SyndicationTypeDcaProvider $dcaFieldProvider, RequestStack $requestStack)
     {
         $this->typeCollection = $typeCollection;
         $this->linkProviderGenerator = $linkProviderGenerator;
@@ -66,6 +66,7 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
     public function getPalette(string $prependPalette, string $appendPalette): string
     {
         $palette = $prependPalette;
+        $palette .= '{config_element_config_legend},syndicationTitleField,syndicationContentField;';
         $palette .= $this->dcaFieldProvider->getPalette(true);
         $palette .= $appendPalette;
 
@@ -78,8 +79,8 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
 
     public function applyConfiguration(ConfigElementData $configElementData): ConfigElementResult
     {
-        $title = $configElementData->getItemData()['headline'];
-        $description = $configElementData->getItemData()['teaser'];
+        $title = $configElementData->getItemData()[$configElementData->getConfiguration()->syndicationTitleField];
+        $description = $configElementData->getItemData()[$configElementData->getConfiguration()->syndicationContentField];
         $url = $this->requestStack->getMasterRequest()->getUri();
 
         $links = $this->linkProviderGenerator->generateFromContext(new SyndicationLinkContext(
