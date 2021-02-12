@@ -47,4 +47,11 @@ interface SyndicationTypeInterface
      * For supported types, see AbstractSyndicationType categoriy constants.
      */
     public function getCategory(): string;
+
+    /**
+     * Return the palette for this syndication type.
+     * The palette is a comma seperated list of dca fields.
+     * Don't add legends or semicolons.
+     */
+    public function getPalette(): string;
 }

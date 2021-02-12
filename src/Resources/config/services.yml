@@ -14,14 +14,14 @@ services:
     resource: '../../Dca/*'
     public: true
 
-  HeimrichHannot\SyndicationTypeBundle\Dca\ConfigElementTypeDcaProvider:
-    public: true
-    calls:
-      - [ setReaderConfigUtil, [ '@?HeimrichHannot\ReaderBundle\Util\ReaderConfigUtil' ] ]
-
   HeimrichHannot\SyndicationTypeBundle\EventListener\Contao\:
     resource: '../../EventListener/Contao/*'
     public: true
+
+  HeimrichHannot\SyndicationTypeBundle\EventListener\Dca\FieldOptionsCallbackListener:
+    public: true
+    calls:
+      - [ setReaderConfigUtil, [ '@?HeimrichHannot\ReaderBundle\Util\ReaderConfigUtil' ] ]
 
   HeimrichHannot\SyndicationTypeBundle\SyndicationType\Concrete\:
     resource: '../../SyndicationType/Concrete/*'

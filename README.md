@@ -15,6 +15,11 @@ This bundle brings an extendable syndication framework to contao. Syndication ca
 
 ## Usage
 
+### Requirements
+- php ^7.2
+- contao ^4.4
+- for iCal (.ics) export: `eluceo/ical (^0.16) `
+
 ### Install
 
 1. Install with composer or contao manager

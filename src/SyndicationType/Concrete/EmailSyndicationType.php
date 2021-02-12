@@ -83,4 +83,9 @@ class EmailSyndicationType extends AbstractSyndicationType
 
         return $link;
     }
+
+    public function getPalette(): string
+    {
+        return 'syndicationEmailSubject,syndicationEmailBody';
+    }
 }

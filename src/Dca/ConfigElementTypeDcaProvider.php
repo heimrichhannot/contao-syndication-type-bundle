@@ -8,15 +8,11 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\Dca;
 
-use Contao\DataContainer;
-use Contao\DC_Table;
-use HeimrichHannot\ReaderBundle\Util\ReaderConfigUtil;
+use HeimrichHannot\SyndicationTypeBundle\EventListener\Dca\FieldOptionsCallbackListener;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConfigElementTypeDcaProvider extends AbstractDcaProvider
 {
-    /** @var ReaderConfigUtil */
-    protected $readerConfigUtil;
     /**
      * @var TranslatorInterface
      */
@@ -30,11 +26,6 @@ class ConfigElementTypeDcaProvider extends AbstractDcaProvider
         $this->translator = $translator;
     }
 
-    public function setReaderConfigUtil(ReaderConfigUtil $readerConfigUtil): void
-    {
-        $this->readerConfigUtil = $readerConfigUtil;
-    }
-
     public function getFields(): array
     {
         $fields = [];
@@ -42,7 +33,7 @@ class ConfigElementTypeDcaProvider extends AbstractDcaProvider
         $fields['syndicationTitleField'] = [
             'label' => $this->getLabel('syndicationTitleField'),
             'inputType' => 'select',
-            'options_callback' => [self::class, 'onFieldOptionsCallback'],
+            'options_callback' => [FieldOptionsCallbackListener::class, '__invoke'],
             'exclude' => true,
             'eval' => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
             'sql' => "varchar(64) NOT NULL default ''",
@@ -50,7 +41,7 @@ class ConfigElementTypeDcaProvider extends AbstractDcaProvider
         $fields['syndicationContentField'] = [
             'label' => $this->getLabel('syndicationContentField'),
             'inputType' => 'select',
-            'options_callback' => [self::class, 'onFieldOptionsCallback'],
+            'options_callback' => [FieldOptionsCallbackListener::class, '__invoke'],
             'exclude' => true,
             'eval' => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
             'sql' => "varchar(64) NOT NULL default ''",
@@ -66,25 +57,6 @@ class ConfigElementTypeDcaProvider extends AbstractDcaProvider
 
     public function getPalettesSelectors(): array
     {
-        return [];
-    }
-
-    /**
-     * @param DataContainer|DC_Table $dataContainer
-     */
-    public function onFieldOptionsCallback(DataContainer $dataContainer): array
-    {
-        if ($dataContainer->id > 0) {
-            switch ($dataContainer->table) {
-                case 'tl_reader_config_element':
-                    if ($this->readerConfigUtil) {
-                        return $this->readerConfigUtil->getFields($dataContainer->activeRecord->pid);
-                    }
-
-                    break;
-            }
-        }
-
         return [];
     }
 }

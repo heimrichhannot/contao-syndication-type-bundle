@@ -30,4 +30,31 @@ abstract class AbstractSyndicationType implements SyndicationTypeInterface
     {
         return static::CATEGORY_SHARE;
     }
+
+    public function getPalette(): string
+    {
+        return '';
+    }
+
+    protected function getValueByFieldOption(SyndicationLinkContext $context, string $option, ?string $defaultValue = null): ?string
+    {
+        if (!isset($context->getConfiguration()[$option]) && !empty($context->getConfiguration()[$option])) {
+            return $defaultValue;
+        }
+
+        return $context->getData()[$context->getConfiguration()[$option]] ?? $defaultValue;
+    }
+
+    protected function appendGetParameterToUrl(string $url, string $parameter, string $value): string
+    {
+        $query = parse_url($url, PHP_URL_QUERY);
+
+        if ($query) {
+            $url .= '&'.$parameter.'='.$value;
+        } else {
+            $url .= '?'.$parameter.'='.$value;
+        }
+
+        return $url;
+    }
 }

@@ -71,7 +71,7 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
         $palette .= $appendPalette;
 
         return $palette;
-//
+
 //        return $prependPalette
 //            .'{config_legend},name,syndicationTemplate,syndicationFacebook,syndicationTwitter,syndicationGooglePlus,syndicationLinkedIn,syndicationXing,syndicationMail,syndicationFeedback,syndicationPdf,syndicationPrint,syndicationIcs,syndicationTumblr,syndicationPinterest,syndicationReddit,syndicationWhatsApp;'
 //            .$appendPalette;
