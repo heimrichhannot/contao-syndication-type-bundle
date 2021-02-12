@@ -20,7 +20,7 @@ use HeimrichHannot\SyndicationTypeBundle\SyndicationType\AbstractSyndicationType
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class IcsExportSyndication extends AbstractSyndicationType
 {
