@@ -4,6 +4,7 @@ huh.syndication_type:
     facebook.title: "Auf Facebook teilen"
     feedback_email.title: "Feedback per E-Mail senden"
     ical.title: "Kalendereintrag aus ICS-Datei erstellen"
+    twitter.title: "Auf Twitter teilen"
 
   fields:
     syndicationContentField:
@@ -54,3 +55,6 @@ huh.syndication_type:
     syndicationTitleField:
       name: "Titel-Feld"
       description: "Wählen Sie hier das Feld aus, welches den Titel (bspw. die Überschrift) für die zu teilendene Entität enthält."
+    syndicationTwitter:
+      name: "Twitter-Syndikation aktivieren"
+      description: "Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Twitter."

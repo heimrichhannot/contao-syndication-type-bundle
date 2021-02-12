@@ -3,13 +3,15 @@
 This bundle brings an extendable syndication framework to contao. Syndication can be easily added to your own bundle/module/element. There are already some bundles/entites supported out-of-the-box (see features section).
 
 ## Features
-- add syndication support for
+- out-of-the-box syndication support for
     - [Reader Bundle](https://github.com/heimrichhannot/contao-reader-bundle)
 - bundles syndication types:
     - sharing:
         - facebook
+        - email
+        - email feedback
     - export:
-        - todo
+        - ical
 - expandable and customizable syndication framework
 - generated links and link lists implementing [PSR-13](https://www.php-fig.org/psr/psr-13/) `LinkInterface` and `LinkProviderInterface`
 
