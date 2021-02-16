@@ -8,8 +8,12 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\Dca;
 
+use HeimrichHannot\SyndicationTypeBundle\Event\AddSyndicationTypeFieldsEvent;
+use HeimrichHannot\SyndicationTypeBundle\Event\AddSyndicationTypePaletteSelectorsEvent;
+use HeimrichHannot\SyndicationTypeBundle\Event\AddSyndicationTypeSubpalettesEvent;
 use HeimrichHannot\SyndicationTypeBundle\EventListener\Dca\FieldOptionsCallbackListener;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SyndicationTypeDcaProvider extends AbstractDcaProvider
@@ -22,11 +26,16 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
      * @var TranslatorInterface
      */
     protected $translator;
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
 
-    public function __construct(SyndicationTypeCollection $typeCollection, TranslatorInterface $translator)
+    public function __construct(SyndicationTypeCollection $typeCollection, TranslatorInterface $translator, EventDispatcherInterface $eventDispatcher)
     {
         $this->typeCollection = $typeCollection;
         $this->translator = $translator;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function prepareDca(string $table): void
@@ -47,17 +56,28 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
             }
         }
 
-        $dca['fields'] = array_merge($dca['fields'] ?: [], $activationFields, $this->getFields());
-        $dca['subpalettes'] = array_merge($dca['subpalettes'] ?: [], $subpalettes);
-        $dca['palettes']['__selector__'] = array_merge($dca['palettes']['__selector__'] ?: [], $selectors);
+        $dca['fields'] = array_merge($dca['fields'] ?: [], $activationFields, $this->getFields(true));
+        $dca['subpalettes'] = array_merge($dca['subpalettes'] ?: [], $subpalettes, $this->getSubpalettes(true));
+        $dca['palettes']['__selector__'] = array_merge($dca['palettes']['__selector__'] ?: [], $selectors, $this->getPalettesSelectors(true));
     }
 
     /**
      * @return string[]
      */
-    public function getSubpalettes(): array
+    public function getSubpalettes(bool $skipActivationSubpalettes = false): array
     {
-        $subpalettes = $this->getActivationSubpalettes();
+        $subpalettes = [];
+
+        if (!$skipActivationSubpalettes) {
+            $subpalettes = $this->getActivationSubpalettes();
+        }
+        $subpalettes = array_merge($subpalettes, $this->getTypeSubpalettes());
+
+        /** @noinspection PhpMethodParametersCountMismatchInspection */
+        /** @noinspection PhpParamsInspection */
+        /** @var AddSyndicationTypeSubpalettesEvent $event */
+        $event = $this->eventDispatcher->dispatch(AddSyndicationTypeSubpalettesEvent::class, new AddSyndicationTypeSubpalettesEvent());
+        $subpalettes = array_merge($subpalettes, $event->getSubpalettes());
 
         return $subpalettes;
     }
@@ -85,37 +105,51 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
     /**
      * @return string[]
      */
-    public function getPalettesSelectors(): array
+    public function getPalettesSelectors(bool $skipActivationFieldSelectors = false): array
     {
         $selectors = [];
 
-        foreach ($this->typeCollection->getTypes() as $type) {
-            if (!empty($type->getPalette())) {
-                $selectors[] = $type::getActivationField();
+        if (!$skipActivationFieldSelectors) {
+            foreach ($this->typeCollection->getTypes() as $type) {
+                if (!empty($type->getPalette())) {
+                    $selectors[] = $type::getActivationField();
+                }
             }
         }
 
-        return $selectors;
+        /** @noinspection PhpMethodParametersCountMismatchInspection */
+        /** @noinspection PhpParamsInspection */
+        /** @var AddSyndicationTypePaletteSelectorsEvent $event */
+        $event = $this->eventDispatcher->dispatch(AddSyndicationTypePaletteSelectorsEvent::class, new AddSyndicationTypePaletteSelectorsEvent());
+
+        return array_merge($selectors, $event->getSelectors());
     }
 
     /**
      * @return array[]
      */
-    public function getFields(): array
+    public function getFields(bool $skipActivationFields = false): array
     {
         $fields = [];
 
-        foreach ($this->typeCollection->getTypes() as $type) {
-            if (!empty($type->getPalette())) {
-                $this->addCheckboxField($type::getActivationField(), $fields, true);
-            } else {
-                $this->addCheckboxField($type::getActivationField(), $fields);
+        if (!$skipActivationFields) {
+            foreach ($this->typeCollection->getTypes() as $type) {
+                if (!empty($type->getPalette())) {
+                    $this->addCheckboxField($type::getActivationField(), $fields, true);
+                } else {
+                    $this->addCheckboxField($type::getActivationField(), $fields);
+                }
             }
         }
 
         $fields = array_merge($fields, $this->getConfigurationFields());
 
-        return $fields;
+        /** @noinspection PhpMethodParametersCountMismatchInspection */
+        /** @noinspection PhpParamsInspection */
+        /** @var AddSyndicationTypeFieldsEvent $event */
+        $event = $this->eventDispatcher->dispatch(AddSyndicationTypeFieldsEvent::class, new AddSyndicationTypeFieldsEvent());
+
+        return array_merge($fields, $event->getFields());
     }
 
     /**

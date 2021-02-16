@@ -23,12 +23,9 @@ class SyndicationTypeCollection
      */
     protected $categories;
 
-    /**
-     * SyndicationTypeCollection constructor.
-     */
-    public function __construct(iterable $types)
+    public function addType(SyndicationTypeInterface $type): void
     {
-        $this->typesIterable = $types;
+        $this->types[$type::getType()] = $type;
     }
 
     /**
@@ -36,26 +33,18 @@ class SyndicationTypeCollection
      */
     public function getTypes(): array
     {
-        if (!$this->types) {
-            $this->types = [];
-
-            foreach ($this->typesIterable as $type) {
-                $this->types[$type::getType()] = $type;
-            }
-        }
-
         return $this->types;
     }
 
     public function hasType(string $type): bool
     {
-        return isset($this->getTypes()[$type]);
+        return isset($this->types[$type]);
     }
 
     public function getType(string $type): ?SyndicationTypeInterface
     {
         if ($this->hasType($type)) {
-            return $this->getTypes()[$type];
+            return $this->types[$type];
         }
 
         return null;
@@ -70,7 +59,7 @@ class SyndicationTypeCollection
     {
         if (!$this->categories) {
             $this->categories = [];
-            $types = $this->getTypes();
+            $types = $this->types;
 
             foreach ($types as $name => $type) {
                 if (!isset($this->categories[$type->getCategory()])) {

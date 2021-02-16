@@ -84,7 +84,11 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
         $url = $this->requestStack->getMasterRequest()->getUri();
 
         $links = $this->linkProviderGenerator->generateFromContext(new SyndicationLinkContext(
-            $title, $description, $url, $configElementData->getItemData(), $configElementData->getConfiguration()->row()
+            $title,
+            $description,
+            $url,
+            $configElementData->getItemData(),
+            $configElementData->getConfiguration()->row()
         ));
 
         return new ConfigElementResult(ConfigElementResult::TYPE_FORMATTED_VALUE, $this->linkRenderer->renderProvider($links));

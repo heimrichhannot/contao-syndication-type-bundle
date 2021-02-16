@@ -8,7 +8,9 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle;
 
+use HeimrichHannot\SyndicationTypeBundle\DependencyInjection\Compiler\SyndicationTypePass;
 use HeimrichHannot\SyndicationTypeBundle\DependencyInjection\SyndicationTypeExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class HeimrichHannotSyndicationTypeBundle extends Bundle
@@ -16,5 +18,10 @@ class HeimrichHannotSyndicationTypeBundle extends Bundle
     public function getContainerExtension()
     {
         return new SyndicationTypeExtension();
+    }
+
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new SyndicationTypePass());
     }
 }
