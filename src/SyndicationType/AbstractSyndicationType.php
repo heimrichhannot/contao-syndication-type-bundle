@@ -8,7 +8,7 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType;
 
-use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use function Symfony\Component\String\u;
 
 abstract class AbstractSyndicationType implements SyndicationTypeInterface
@@ -21,7 +21,7 @@ abstract class AbstractSyndicationType implements SyndicationTypeInterface
         return u('syndication '.static::getType())->camel();
     }
 
-    public function isEnabledByContext(SyndicationLinkContext $context): bool
+    public function isEnabledByContext(SyndicationContext $context): bool
     {
         return true === (bool) $context->getConfiguration()[$this->getActivationField()];
     }
@@ -36,7 +36,7 @@ abstract class AbstractSyndicationType implements SyndicationTypeInterface
         return '';
     }
 
-    protected function getValueByFieldOption(SyndicationLinkContext $context, string $option, ?string $defaultValue = null): ?string
+    protected function getValueByFieldOption(SyndicationContext $context, string $option, ?string $defaultValue = null): ?string
     {
         if (!isset($context->getConfiguration()[$option]) && !empty($context->getConfiguration()[$option])) {
             return $defaultValue;

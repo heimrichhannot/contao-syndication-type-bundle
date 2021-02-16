@@ -8,8 +8,8 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType\Concrete;
 
+use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
-use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\AbstractSyndicationType;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -39,7 +39,7 @@ class FacebookSyndicationType extends AbstractSyndicationType
         return 'facebook';
     }
 
-    public function generate(SyndicationLinkContext $context): SyndicationLink
+    public function generate(SyndicationContext $context): SyndicationLink
     {
         return $this->linkFactory->create(
             ['external'],

@@ -8,8 +8,8 @@ services:
   HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator: ~
   HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer: ~
 
-  HeimrichHannot\SyndicationTypeBundle\Dca\:
-    resource: '../../Dca/*'
+  HeimrichHannot\SyndicationTypeBundle\:
+    resource: '../../{Dca,ExportSyndication}/*'
     public: true
 
   HeimrichHannot\SyndicationTypeBundle\EventListener\Contao\:
@@ -20,6 +20,10 @@ services:
     public: true
     calls:
       - [ setReaderConfigUtil, [ '@?HeimrichHannot\ReaderBundle\Util\ReaderConfigUtil' ] ]
+
+  HeimrichHannot\SyndicationTypeBundle\EventSubscriber\:
+    resource: '../../EventSubscriber/*'
+    autoconfigure: true
 
   HeimrichHannot\SyndicationTypeBundle\SyndicationType\Concrete\:
     resource: '../../SyndicationType/Concrete/*'

@@ -1,20 +1,30 @@
 <?php
-
-/*
+/**
+ * Contao Open Source CMS
+ *
  * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
- * @license LGPL-3.0-or-later
+ * @author  Thomas Körner <t.koerner@heimrich-hannot.de>
+ * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
-namespace HeimrichHannot\SyndicationTypeBundle\SyndicationLink;
 
-class SyndicationLinkContext
+namespace HeimrichHannot\SyndicationTypeBundle\SyndicationContext;
+
+
+class SyndicationContext
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $title;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $content;
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $url;
     /**
      * @var array
@@ -26,7 +36,7 @@ class SyndicationLinkContext
     protected $data;
 
     /**
-     * SyndicationLinkContext constructor.
+     * SyndicationContext constructor.
      */
     public function __construct(string $title, string $content, string $url, array $data, array $configuration)
     {

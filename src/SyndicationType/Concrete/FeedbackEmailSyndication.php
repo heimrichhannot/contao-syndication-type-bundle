@@ -8,8 +8,8 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType\Concrete;
 
+use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
-use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
 
 class FeedbackEmailSyndication extends EmailSyndicationType
 {
@@ -18,7 +18,7 @@ class FeedbackEmailSyndication extends EmailSyndicationType
         return 'feedback_email';
     }
 
-    public function generate(SyndicationLinkContext $context): SyndicationLink
+    public function generate(SyndicationContext $context): SyndicationLink
     {
         $subject = strip_tags(str_replace(
             ['%title%', '%content%', '%url%'],

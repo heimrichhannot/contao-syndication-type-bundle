@@ -14,8 +14,8 @@ use DateTime;
 use Eluceo\iCal\Component\Calendar;
 use Eluceo\iCal\Component\Event;
 use Exception;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
-use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\AbstractSyndicationType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,7 +59,7 @@ class IcsExportSyndication extends AbstractSyndicationType
         return 'syndicationIcsLocationField,syndicationIcsStartDateField,syndicationIcsEndDateField,syndicationIcsAddTime';
     }
 
-    public function generate(SyndicationLinkContext $context): SyndicationLink
+    public function generate(SyndicationContext $context): SyndicationLink
     {
         if ($context->getConfiguration()['id'] == $this->requestStack->getMasterRequest()->get(static::PARAM)) {
             $data = [

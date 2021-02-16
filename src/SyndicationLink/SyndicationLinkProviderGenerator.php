@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationLink;
 
+use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection;
 
 class SyndicationLinkProviderGenerator
@@ -28,7 +29,7 @@ class SyndicationLinkProviderGenerator
     /**
      * @param string[] $syndicationTypes a list of syndication types to render links for
      */
-    public function generate(array $syndicationTypes, SyndicationLinkContext $context): SyndicationLinkProvider
+    public function generate(array $syndicationTypes, SyndicationContext $context): SyndicationLinkProvider
     {
         $links = [];
 
@@ -45,7 +46,7 @@ class SyndicationLinkProviderGenerator
         return $this->createProvider($links);
     }
 
-    public function generateFromContext(SyndicationLinkContext $context): SyndicationLinkProvider
+    public function generateFromContext(SyndicationContext $context): SyndicationLinkProvider
     {
         $links = [];
 

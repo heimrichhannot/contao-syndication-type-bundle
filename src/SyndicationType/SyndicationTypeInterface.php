@@ -8,8 +8,8 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType;
 
+use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
-use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
 
 interface SyndicationTypeInterface
 {
@@ -27,17 +27,17 @@ interface SyndicationTypeInterface
     /**
      * Generate the syndication link.
      */
-    public function generate(SyndicationLinkContext $context): SyndicationLink;
+    public function generate(SyndicationContext $context): SyndicationLink;
 
     /**
      * Return if the syndication link should be generated.
      */
-    public function isEnabledByContext(SyndicationLinkContext $context): bool;
+    public function isEnabledByContext(SyndicationContext $context): bool;
 
     /**
      * Return the database field to active the syndication type.
      * Field name should be the keyword "syndication" + the type in camel case, "syndicationFacebook" for example.
-     * Value should be included in the SyndicationLinkContext data array.
+     * Value should be included in the SyndicationContext data array.
      */
     public static function getActivationField(): string;
 

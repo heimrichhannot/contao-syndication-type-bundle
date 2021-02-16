@@ -8,12 +8,13 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\ConfigElementType;
 
+use Contao\Model;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementData;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementResult;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
 use HeimrichHannot\HeadBundle\Tag\Meta\MetaDescription;
 use HeimrichHannot\SyndicationTypeBundle\Dca\SyndicationTypeDcaProvider;
-use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkContext;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection;
@@ -79,18 +80,17 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
 
     public function applyConfiguration(ConfigElementData $configElementData): ConfigElementResult
     {
-        $title = $configElementData->getItemData()[$configElementData->getConfiguration()->syndicationTitleField];
-        $description = $configElementData->getItemData()[$configElementData->getConfiguration()->syndicationContentField];
-        $url = $this->requestStack->getMasterRequest()->getUri();
-
-        $links = $this->linkProviderGenerator->generateFromContext(new SyndicationLinkContext(
-            $title,
-            $description,
-            $url,
-            $configElementData->getItemData(),
-            $configElementData->getConfiguration()->row()
-        ));
+        $links = $this->linkProviderGenerator->generateFromContext($this->getSyndicationContext($configElementData->getItemData(), $configElementData->getConfiguration()));
 
         return new ConfigElementResult(ConfigElementResult::TYPE_FORMATTED_VALUE, $this->linkRenderer->renderProvider($links));
+    }
+
+    public function getSyndicationContext(array $data, Model $configuration): SyndicationContext
+    {
+        $title = $data[$configuration->syndicationTitleField];
+        $description = $data[$configuration->syndicationContentField];
+        $url = $this->requestStack->getMasterRequest()->getUri();
+
+        return new SyndicationContext($title, $description, $url, $data, $configuration->row());
     }
 }

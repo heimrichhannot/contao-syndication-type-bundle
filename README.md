@@ -1,4 +1,4 @@
-# Contao Syndication Config Element Type Bundle
+# Contao Syndication Type Bundle
 
 This bundle brings an extendable syndication framework to contao. Syndication can be easily added to your own bundle/module/element. There are already some bundles/entites supported out-of-the-box (see features section).
 

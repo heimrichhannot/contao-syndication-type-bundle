@@ -19,6 +19,10 @@ class SyndicationTypeCollection
      */
     protected $types;
     /**
+     * @var string[]
+     */
+    protected $exportTypes = [];
+    /**
      * @var array
      */
     protected $categories;
@@ -26,6 +30,10 @@ class SyndicationTypeCollection
     public function addType(SyndicationTypeInterface $type): void
     {
         $this->types[$type::getType()] = $type;
+
+        if ($type instanceof ExportSyndicationTypeInterface) {
+            $this->exportTypes[] = $type::getType();
+        }
     }
 
     /**
@@ -84,5 +92,14 @@ class SyndicationTypeCollection
         asort($categories);
 
         return $categories;
+    }
+
+    public function isExportType(string $type): bool
+    {
+        if ($this->getType($type) && ($this->getType($type) instanceof ExportSyndicationTypeInterface)) {
+            return true;
+        }
+
+        return false;
     }
 }
