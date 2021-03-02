@@ -23,15 +23,15 @@ class FeedbackEmailSyndication extends EmailSyndicationType
         $subject = strip_tags(str_replace(
             ['%title%', '%content%', '%url%'],
             [$context->getTitle(), $context->getContent(), $context->getUrl()],
-            $context->getConfiguration()['syndicationEmailSubject']
+            $context->getConfiguration()['synEmailSubject']
         ));
         $body = strip_tags(str_replace(
             ['%title%', '%content%', '%url%'],
             [$context->getTitle(), $context->getContent(), $context->getUrl()],
-            $context->getConfiguration()['syndicationEmailBody']
+            $context->getConfiguration()['synEmailBody']
         ));
 
-        $href = $this->generateMailToLink($context->getConfiguration()['syndicationEmailAddress'], [
+        $href = $this->generateMailToLink($context->getConfiguration()['synEmailAddress'], [
             'subject' => $subject,
             'body' => $body,
         ]);
@@ -50,6 +50,6 @@ class FeedbackEmailSyndication extends EmailSyndicationType
 
     public function getPalette(): string
     {
-        return 'syndicationEmailAddress,syndicationEmailSubject,syndicationEmailBody';
+        return 'synEmailAddress,synEmailSubject,synEmailBody';
     }
 }

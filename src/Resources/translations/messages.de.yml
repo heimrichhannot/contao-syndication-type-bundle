@@ -5,56 +5,57 @@ huh.syndication_type:
     feedback_email.title: "Feedback per E-Mail senden"
     ical.title: "Kalendereintrag aus ICS-Datei erstellen"
     twitter.title: "Auf Twitter teilen"
+    print.title: "Drucken"
 
   fields:
-    syndicationContentField:
+    synContentField:
       name: "Inhalt-Feld"
       description: "Wählen Sie hier das Feld aus, welches den Inhalt (bspw. einen Teaser-Text) für die zu teilendene Entität enthält."
-    syndicationEmail:
+    synAddEmail:
       name: "E-Mail-Syndikation aktivieren"
       description: "Aktivieren Sie die Syndikation zur Verbreitung des Beitrags per E-Mail."
-    syndicationEmailAddress:
+    synEmailAddress:
       name: "E-Mail Empfänger"
       description: "Geben Sie hier den Empfänger (E-Mail-Adresse) für die E-Mail ein."
-    syndicationEmailBody:
+    synEmailBody:
       name: "E-Mail Inhalt"
       description: "Geben Sie hier den Inhalt für die E-Mail ein. Sie können die Platzhalter %title% (Titel), %content% (Inhaltsauszug) und %url% (URL) verwenden, welche automatisch ersetzen werden."
-    syndicationEmailSubject:
+    synEmailSubject:
       name: "E-Mail Betreff"
       description: "Geben Sie hier ein Betreff für die E-Mail ein. Sie können die Platzhalter %title% (Titel), %content% (Inhaltsauszug) und %url% (URL) verwenden, welche automatisch ersetzen werden."
-    syndicationFacebook:
+    synAddFacebook:
       name: "Facebook-Syndikation aktivieren"
       description: "Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Facebook."
-    syndicationFeedbackEmail:
+    synAddFeedbackEmail:
       name: "Feedback-E-Mail-Syndikaton aktivieren"
       description: "Aktivieren Sie die Syndikation um Feedback per E-Mail zu aktivieren."
-    syndicationIcs:
+    synAddIcs:
       name: "iCal-Syndikation (.ics) aktivieren"
       description: "Aktivieren Sie die Syndikation für das Hinzufügen eines Links zur Erzeugung von ICS-Termindateien."
-    syndicationIcsLocationField:
+    synIcsLocationField:
       name: "Ortsfeld"
       description: "Wählen Sie hier das Feld aus, das für den Ort in der ICS-Datei genutzt werden soll."
-    syndicationIcsStartDateField:
+    synIcsStartDateField:
       name: "Startdatumsfeld"
       description: "Wählen Sie hier das Feld aus, das als Startdatum in der ICS-Datei genutzt werden soll."
-    syndicationIcsEndDateField:
+    synIcsEndDateField:
       name: "Enddatumsfeld"
       description: "Wählen Sie hier das Feld aus, das als Enddatum in der ICS-Datei genutzt werden soll."
-    syndicationIcsAddTime:
+    synIcsAddTime:
       name: "Unterstützung für Zeit hinzufügen"
       description: "Wählen Sie diese Option, wenn auch eine Zeit in der exportierten ICS-Datei enthalten sein soll."
-    syndicationIcsAddTimeField:
+    synIcsAddTimeField:
       name: "\"Zeit hinzufügen\"-Selektorfeld"
       description: "Wählen Sie hier das Feld aus, das in der verknüpften Entität darüber entscheidet, ob eine Zeit hinzugefügt werden soll. Wenn nicht gesetzt, wird die Zeit immer hinzugefügt."
-    syndicationIcsStartTimeField:
+    synIcsStartTimeField:
       name: "Startzeitfeld"
       description: "Wählen Sie hier das Feld aus, das als Startzeit in der ICS-Datei genutzt werden soll."
-    syndicationIcsEndTimeField:
+    synIcsEndTimeField:
       name: "Endzeitfeld"
       description: "Wählen Sie hier das Feld aus, das als Endzeit in der ICS-Datei genutzt werden soll."
-    syndicationTitleField:
+    synTitleField:
       name: "Titel-Feld"
       description: "Wählen Sie hier das Feld aus, welches den Titel (bspw. die Überschrift) für die zu teilendene Entität enthält."
-    syndicationTwitter:
+    synAddTwitter:
       name: "Twitter-Syndikation aktivieren"
       description: "Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Twitter."

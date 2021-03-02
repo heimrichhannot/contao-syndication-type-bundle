@@ -16,9 +16,13 @@ abstract class AbstractSyndicationType implements SyndicationTypeInterface
     const CATEGORY_SHARE = 'share';
     const CATEGORY_EXPORT = 'export';
 
+    const REL_ALTERNATE = 'alternate';
+    const REL_EXTERNAL = 'external';
+    const REL_NOFOLLOW = 'nofollow';
+
     public static function getActivationField(): string
     {
-        return u('syndication '.static::getType())->camel();
+        return u('syn add '.static::getType())->camel();
     }
 
     public function isEnabledByContext(SyndicationContext $context): bool

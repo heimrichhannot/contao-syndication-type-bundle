@@ -42,6 +42,7 @@ class SyndicationLinkRenderer
         }
 
         $attributes['href'] = $link->getHref();
+        $attributes['rel'] = array_unique(array_merge(($attributes['rel'] ?: []), $link->getRels()));
 
         $renderedAttributes = '';
 

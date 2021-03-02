@@ -30,16 +30,16 @@ class ConfigElementTypeDcaProvider extends AbstractDcaProvider
     {
         $fields = [];
 
-        $fields['syndicationTitleField'] = [
-            'label' => $this->getLabel('syndicationTitleField'),
+        $fields['synTitleField'] = [
+            'label' => $this->getLabel('synTitleField'),
             'inputType' => 'select',
             'options_callback' => [FieldOptionsCallbackListener::class, '__invoke'],
             'exclude' => true,
             'eval' => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
             'sql' => "varchar(64) NOT NULL default ''",
         ];
-        $fields['syndicationContentField'] = [
-            'label' => $this->getLabel('syndicationContentField'),
+        $fields['synContentField'] = [
+            'label' => $this->getLabel('synContentField'),
             'inputType' => 'select',
             'options_callback' => [FieldOptionsCallbackListener::class, '__invoke'],
             'exclude' => true,

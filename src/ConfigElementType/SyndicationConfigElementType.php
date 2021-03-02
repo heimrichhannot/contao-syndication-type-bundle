@@ -67,7 +67,7 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
     public function getPalette(string $prependPalette, string $appendPalette): string
     {
         $palette = $prependPalette;
-        $palette .= '{config_element_config_legend},syndicationTitleField,syndicationContentField;';
+        $palette .= '{config_element_config_legend},synTitleField,synContentField;';
         $palette .= $this->dcaFieldProvider->getPalette(true);
         $palette .= $appendPalette;
 
@@ -87,8 +87,8 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
 
     public function getSyndicationContext(array $data, Model $configuration): SyndicationContext
     {
-        $title = $data[$configuration->syndicationTitleField];
-        $description = $data[$configuration->syndicationContentField];
+        $title = $data[$configuration->synTitleField];
+        $description = $data[$configuration->synContentField];
         $url = $this->requestStack->getMasterRequest()->getUri();
 
         return new SyndicationContext($title, $description, $url, $data, $configuration->row());

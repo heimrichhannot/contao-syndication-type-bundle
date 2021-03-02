@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\Dca;
 
+use Contao\Controller;
 use HeimrichHannot\SyndicationTypeBundle\Event\AddSyndicationTypeFieldsEvent;
 use HeimrichHannot\SyndicationTypeBundle\Event\AddSyndicationTypePaletteSelectorsEvent;
 use HeimrichHannot\SyndicationTypeBundle\Event\AddSyndicationTypeSubpalettesEvent;
@@ -85,7 +86,8 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
     public function getTypeSubpalettes(): array
     {
         return [
-            'syndicationIcsAddTime' => 'syndicationIcsAddTimeField,syndicationIcsStartTimeField,syndicationIcsEndTimeField',
+            'synIcsAddTime' => 'synIcsAddTimeField,synIcsStartTimeField,synIcsEndTimeField',
+            'synUsePrintTemplate' => 'synPrintTemplate',
         ];
     }
 
@@ -116,6 +118,9 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
                 }
             }
         }
+
+        $selectors[] = 'synIcsAddTime';
+        $selectors[] = 'synUsePrintTemplate';
 
         /** @noinspection PhpMethodParametersCountMismatchInspection */
         /** @noinspection PhpParamsInspection */
@@ -158,24 +163,24 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
     public function getConfigurationFields(): array
     {
         $fields = [
-            'syndicationEmailAddress' => [
-                'label' => $this->getLabel('syndicationEmailAddress'),
+            'synEmailAddress' => [
+                'label' => $this->getLabel('synEmailAddress'),
                 'exclude' => true,
                 'search' => true,
                 'inputType' => 'text',
                 'eval' => ['maxlength' => 64, 'tl_class' => 'w50', 'mandatory' => true],
                 'sql' => "varchar(64) NOT NULL default ''",
             ],
-            'syndicationEmailSubject' => [
-                'label' => $this->getLabel('syndicationEmailSubject'),
+            'synEmailSubject' => [
+                'label' => $this->getLabel('synEmailSubject'),
                 'exclude' => true,
                 'search' => true,
                 'inputType' => 'text',
                 'eval' => ['maxlength' => 255, 'tl_class' => 'w50'],
                 'sql' => "varchar(255) NOT NULL default ''",
             ],
-            'syndicationEmailBody' => [
-                'label' => $this->getLabel('syndicationEmailBody'),
+            'synEmailBody' => [
+                'label' => $this->getLabel('synEmailBody'),
                 'exclude' => true,
                 'search' => true,
                 'inputType' => 'textarea',
@@ -184,13 +189,16 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
             ],
         ];
 
-        $this->addFieldSelectField('syndicationIcsLocationField', $fields);
-        $this->addFieldSelectField('syndicationIcsStartDateField', $fields);
-        $this->addFieldSelectField('syndicationIcsEndDateField', $fields);
-        $this->addCheckboxField('syndicationIcsAddTime', $fields, true);
-        $this->addFieldSelectField('syndicationIcsAddTimeField', $fields);
-        $this->addFieldSelectField('syndicationIcsStartTimeField', $fields);
-        $this->addFieldSelectField('syndicationIcsEndTimeField', $fields);
+        $this->addFieldSelectField('synIcsLocationField', $fields);
+        $this->addFieldSelectField('synIcsStartDateField', $fields);
+        $this->addFieldSelectField('synIcsEndDateField', $fields);
+        $this->addCheckboxField('synIcsAddTime', $fields, true);
+        $this->addFieldSelectField('synIcsAddTimeField', $fields);
+        $this->addFieldSelectField('synIcsStartTimeField', $fields);
+        $this->addFieldSelectField('synIcsEndTimeField', $fields);
+
+        $this->addCheckboxField('synUsePrintTemplate', $fields, true);
+        $this->addTemplateSelectField('synPrintTemplate', $fields, 'syndication_type_print_');
 
         return $fields;
     }
@@ -245,10 +253,24 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
 
     protected function addFieldSelectField(string $fieldName, array &$fields): void
     {
+        $this->addSelectField($fieldName, $fields, [
+            'options_callback' => [FieldOptionsCallbackListener::class, '__invoke'],
+        ]);
+    }
+
+    protected function addTemplateSelectField(string $fieldName, array &$fields, string $templateGroup): void
+    {
+        $this->addSelectField($fieldName, $fields, ['options_callback' => function ($dc) use ($templateGroup) {
+            return Controller::getTemplateGroup($templateGroup);
+        }]);
+    }
+
+    protected function addSelectField(string $fieldName, array &$fields, array $config): void
+    {
         $fields[$fieldName] = [
             'label' => $this->getLabel($fieldName),
             'inputType' => 'select',
-            'options_callback' => [FieldOptionsCallbackListener::class, '__invoke'],
+            'options_callback' => $config['options_callback'],
             'exclude' => true,
             'eval' => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'],
             'sql' => "varchar(64) NOT NULL default ''",

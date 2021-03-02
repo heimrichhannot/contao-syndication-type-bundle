@@ -56,7 +56,7 @@ class IcsExportSyndication extends AbstractSyndicationType
 
     public function getPalette(): string
     {
-        return 'syndicationIcsLocationField,syndicationIcsStartDateField,syndicationIcsEndDateField,syndicationIcsAddTime';
+        return 'synIcsLocationField,synIcsStartDateField,synIcsEndDateField,synIcsAddTime';
     }
 
     public function generate(SyndicationContext $context): SyndicationLink
@@ -65,19 +65,19 @@ class IcsExportSyndication extends AbstractSyndicationType
             $data = [
                 'title' => $context->getTitle(),
                 'description' => $context->getContent(),
-                'location' => $this->getValueByFieldOption($context, 'syndicationIcsLocationField'),
-                'startDate' => $this->getValueByFieldOption($context, 'syndicationIcsStartDateField'),
-                'endDate' => $this->getValueByFieldOption($context, 'syndicationIcsEndDateField'),
+                'location' => $this->getValueByFieldOption($context, 'synIcsLocationField'),
+                'startDate' => $this->getValueByFieldOption($context, 'synIcsStartDateField'),
+                'endDate' => $this->getValueByFieldOption($context, 'synIcsEndDateField'),
             ];
 
-            if (isset($context->getConfiguration()['syndicationIcsAddTime']) && true === (bool) $context->getConfiguration()['syndicationIcsAddTime']) {
-                if (!isset($context->getConfiguration()['syndicationIcsAddTimeField']) || empty($context->getConfiguration()['syndicationIcsAddTimeField'])) {
+            if (isset($context->getConfiguration()['synIcsAddTime']) && true === (bool) $context->getConfiguration()['synIcsAddTime']) {
+                if (!isset($context->getConfiguration()['synIcsAddTimeField']) || empty($context->getConfiguration()['synIcsAddTimeField'])) {
                     $data['addTime'] = true;
                 } else {
-                    $data['addTime'] = (bool) $this->getValueByFieldOption($context, 'syndicationIcsAddTimeField', false);
+                    $data['addTime'] = (bool) $this->getValueByFieldOption($context, 'synIcsAddTimeField', false);
                 }
-                $data['startTime'] = $this->getValueByFieldOption($context, 'syndicationIcsStartTimeField');
-                $data['endTime'] = $this->getValueByFieldOption($context, 'syndicationIcsEndTimeField');
+                $data['startTime'] = $this->getValueByFieldOption($context, 'synIcsStartTimeField');
+                $data['endTime'] = $this->getValueByFieldOption($context, 'synIcsEndTimeField');
             }
 
             $this->exportIcsFile($this->generateIcalFile($context->getUrl(), $data));

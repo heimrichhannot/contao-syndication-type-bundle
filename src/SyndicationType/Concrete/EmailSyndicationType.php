@@ -44,12 +44,12 @@ class EmailSyndicationType extends AbstractSyndicationType
         $subject = strip_tags(str_replace(
             ['%title%', '%content%', '%url%'],
             [$context->getTitle(), $context->getContent(), $context->getUrl()],
-            $context->getConfiguration()['syndicationEmailSubject']
+            $context->getConfiguration()['synEmailSubject']
         ));
         $body = strip_tags(str_replace(
             ['%title%', '%content%', '%url%'],
             [$context->getTitle(), $context->getContent(), $context->getUrl()],
-            $context->getConfiguration()['syndicationEmailBody']
+            $context->getConfiguration()['synEmailBody']
         ));
 
         $href = $this->generateMailToLink('', [
@@ -86,6 +86,6 @@ class EmailSyndicationType extends AbstractSyndicationType
 
     public function getPalette(): string
     {
-        return 'syndicationEmailSubject,syndicationEmailBody';
+        return 'synEmailSubject,synEmailBody';
     }
 }
