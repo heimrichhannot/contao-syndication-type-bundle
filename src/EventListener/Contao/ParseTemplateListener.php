@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\EventListener\Contao;
 
+use Contao\System;
 use Contao\Template;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\ExportSyndicationHandler;
@@ -26,37 +27,40 @@ class ParseTemplateListener
      * @var RequestStack
      */
     protected $requestStack;
+    /**
+     * @var array
+     */
+    protected $bundleConfig;
 
     /**
      * ParseTemplateListener constructor.
      */
-    public function __construct(ExportSyndicationHandler $exportSyndicationHandler, RequestStack $requestStack)
+    public function __construct(ExportSyndicationHandler $exportSyndicationHandler, RequestStack $requestStack, array $bundleConfig)
     {
         $this->exportSyndicationHandler = $exportSyndicationHandler;
         $this->requestStack = $requestStack;
+        $this->bundleConfig = $bundleConfig;
     }
 
     public function __invoke(Template $template): void
     {
-        if ('article' !== $template->type || $template->isSyndicationExportTemplate) {
-            return;
-        }
-
-        $buffer = $template->inherit();
-
-        // HOOK: add custom parse filters
-        if (isset($GLOBALS['TL_HOOKS']['parseFrontendTemplate']) && \is_array($GLOBALS['TL_HOOKS']['parseFrontendTemplate'])) {
-            foreach ($GLOBALS['TL_HOOKS']['parseFrontendTemplate'] as $callback) {
-                $this->import($callback[0]);
-                $buffer = $this->{$callback[0]}->{$callback[1]}($buffer, $template->getName());
+        if (isset($this->bundleConfig['enable_article_syndication']) && true === $this->bundleConfig['enable_article_syndication']) {
+            if ('article' !== $template->type || $template->isSyndicationExportTemplate) {
+                return;
             }
-        }
 
-        $context = new SyndicationContext($template->title, $buffer, $this->requestStack->getMasterRequest()->getUri(), $template->getData(), $template->getData());
-        $this->exportSyndicationHandler->exportByContext($context);
-//
-//        $context = new SyndicationContext($template->title, $module->teaser, $this->requestStack->getMasterRequest()->getUri(), $template->getData(), $data);
-//        $links = $this->linkRenderer->renderProvider($this->syndicationGenerator->generateFromContext($context));
-//        $template->elements = array_merge([$links], $template->elements);
+            $buffer = $template->inherit();
+
+            // HOOK: add custom parse filters
+            if (isset($GLOBALS['TL_HOOKS']['parseFrontendTemplate']) && \is_array($GLOBALS['TL_HOOKS']['parseFrontendTemplate'])) {
+                foreach ($GLOBALS['TL_HOOKS']['parseFrontendTemplate'] as $callback) {
+                    System::importStatic($callback[0]);
+                    $buffer = $this->{$callback[0]}->{$callback[1]}($buffer, $template->getName());
+                }
+            }
+
+            $context = new SyndicationContext($template->title, $buffer, $this->requestStack->getMasterRequest()->getUri(), $template->getData(), $template->getData());
+            $this->exportSyndicationHandler->exportByContext($context);
+        }
     }
 }

@@ -1,6 +1,8 @@
 services:
   _defaults:
     autowire: true
+    bind:
+      $bundleConfig: '%huh_syndication_type%'
 
   HeimrichHannot\SyndicationTypeBundle\SyndicationType\:
     resource: '../../SyndicationType/*'

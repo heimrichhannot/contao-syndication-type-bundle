@@ -21,14 +21,19 @@ class LoadDataContainerListener
      * @var ConfigElementTypeDcaProvider
      */
     protected $configElementTypeDcaProvider;
+    /**
+     * @var array
+     */
+    protected $bundleConfig;
 
     /**
      * LoadDataContainerListener constructor.
      */
-    public function __construct(SyndicationTypeDcaProvider $syndicationTypeDcaProvider, ConfigElementTypeDcaProvider $configElementTypeDcaProvider)
+    public function __construct(SyndicationTypeDcaProvider $syndicationTypeDcaProvider, ConfigElementTypeDcaProvider $configElementTypeDcaProvider, array $bundleConfig)
     {
         $this->syndicationTypeDcaProvider = $syndicationTypeDcaProvider;
         $this->configElementTypeDcaProvider = $configElementTypeDcaProvider;
+        $this->bundleConfig = $bundleConfig;
     }
 
     public function __invoke(string $table): void
@@ -44,9 +49,11 @@ class LoadDataContainerListener
 
     public function prepareArticleTable(string $table)
     {
-        $dca = &$GLOBALS['TL_DCA']['tl_article'];
-        $dca['palettes']['default'] = str_replace('printable', $this->syndicationTypeDcaProvider->getPalette(false), $dca['palettes']['default']);
-        $this->syndicationTypeDcaProvider->prepareDca($table);
+        if (isset($this->bundleConfig['enable_article_syndication']) && true === $this->bundleConfig['enable_article_syndication']) {
+            $dca = &$GLOBALS['TL_DCA']['tl_article'];
+            $dca['palettes']['default'] = str_replace('printable', $this->syndicationTypeDcaProvider->getPalette(false), $dca['palettes']['default']);
+            $this->syndicationTypeDcaProvider->prepareDca($table);
+        }
     }
 
     protected function prepareReaderConfigElementTable(string $table)

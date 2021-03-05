@@ -4,6 +4,7 @@ This bundle brings an extendable syndication framework to contao. Syndication ca
 
 ## Features
 - out-of-the-box syndication support for
+    - article
     - [Reader Bundle](https://github.com/heimrichhannot/contao-reader-bundle)
 - bundled syndication types:
     - sharing: facebook, email, email feedback, twitter
@@ -24,6 +25,13 @@ This bundle brings an extendable syndication framework to contao. Syndication ca
 
 1. Install with composer or contao manager
 1. Update database
+
+### Article syndication
+You can replace the contao article syndication with the syndication of this bundle.
+
+1. Set `huh_syndication_type.enable_article_syndication` to true
+1. Clear your cache and update the database
+1. You'll find the new syndication config in your article configuration
 
 ### Reader Bundle
 
@@ -110,4 +118,12 @@ Syndication bundle is build to be reused. You can easily add it to your code.
 1. Create a Event Subscriber for `AddSyndicationTypeFieldsEvent`,`AddSyndicationTypePaletteSelectorsEvent` and `AddSyndicationTypeSubpalettesEvent` to add custom dca fields and subpalettes
 
 
+## Configuration reference
 
+```yaml
+# Default configuration for extension with alias: "huh_syndication_type"
+huh_syndication_type:
+
+    # Enable this option to replace the default contao article syndication with syndication type bundle article syndication.
+    enable_article_syndication: false
+```
