@@ -9,8 +9,6 @@
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType;
 
 use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
-use HeimrichHannot\SyndicationTypeBundle\SyndicationType\ExportSyndicationTypeInterface;
-use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection;
 
 class ExportSyndicationHandler
 {
@@ -29,13 +27,7 @@ class ExportSyndicationHandler
 
     public function export(string $type, SyndicationContext $context): void
     {
-        if (!$this->syndicationTypeCollection->isExportType($type)) {
-            return;
-        }
-        /** @var ExportSyndicationTypeInterface $type */
-        $type = $this->syndicationTypeCollection->getType($type);
-
-        if ($type->shouldExport($context)) {
+        if ($type = $this->willRunExport($type, $context)) {
             $type->export($context);
         }
     }
@@ -48,5 +40,35 @@ class ExportSyndicationHandler
                 $this->export($type::getType(), $context);
             }
         }
+    }
+
+    public function willRunExport(string $type, SyndicationContext $context): ?ExportSyndicationTypeInterface
+    {
+        if (!$this->syndicationTypeCollection->isExportType($type)) {
+            return null;
+        }
+
+        /** @var ExportSyndicationTypeInterface $type */
+        $type = $this->syndicationTypeCollection->getType($type);
+
+        if ($type->shouldExport($context)) {
+            return $type;
+        }
+
+        return null;
+    }
+
+    public function willRunExportByContext(SyndicationContext $context): bool
+    {
+        /** @var ExportSyndicationTypeInterface $type */
+        foreach ($this->syndicationTypeCollection->getTypes() as $type) {
+            if ($type->isEnabledByContext($context)) {
+                if (null !== $this->willRunExport($type::getType(), $context)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

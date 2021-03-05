@@ -49,6 +49,8 @@ class ParseTemplateListener
                 return;
             }
 
+            $template->printable = false;
+
             $buffer = $template->inherit();
 
             // HOOK: add custom parse filters

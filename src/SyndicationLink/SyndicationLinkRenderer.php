@@ -8,7 +8,10 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationLink;
 
+use HeimrichHannot\TwigSupportBundle\Exception\TemplateNotFoundException;
+use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Twig\Environment;
 
 class SyndicationLinkRenderer
 {
@@ -16,13 +19,23 @@ class SyndicationLinkRenderer
      * @var KernelInterface
      */
     protected $kernel;
+    /**
+     * @var Environment
+     */
+    protected $twig;
+    /**
+     * @var TwigTemplateLocator
+     */
+    protected $twigTemplateLocator;
 
     /**
      * SyndicationLinkRenderer constructor.
      */
-    public function __construct(KernelInterface $kernel)
+    public function __construct(KernelInterface $kernel, Environment $twig, TwigTemplateLocator $twigTemplateLocator)
     {
         $this->kernel = $kernel;
+        $this->twig = $twig;
+        $this->twigTemplateLocator = $twigTemplateLocator;
     }
 
     /**
@@ -34,6 +47,7 @@ class SyndicationLinkRenderer
      * - prepend: (string) Will be prepended before the rendered links. Could be for example a headline or an open tag.
      * - append: (string) Will be appended after the rendered links. Could be for example a clearfix or an closing tag.
      * - disable_indexer_comments: (bool) Disable indexer::stop and indexer::continue comments
+     * - linkTemplate: (string) The name on an twig templates that renders a single link. Default: syndication_link_default
      */
     public function renderProvider(SyndicationLinkProvider $provider, array $options = []): string
     {
@@ -46,7 +60,10 @@ class SyndicationLinkRenderer
         }
 
         foreach ($links as $link) {
-            $result .= $this->render($link, ['disable_dev_comments' => true]);
+            $result .= $this->render($link, [
+                'disable_dev_comments' => true,
+                'template' => $options['linkTemplate'] ?? null,
+            ]);
         }
 
         if (isset($options['prepend']) && \is_string($options['prepend'])) {
@@ -75,6 +92,7 @@ class SyndicationLinkRenderer
      * - attributes: (array) Set addition attributes. Existing attributes will be overridden (array_merge used)
      * - content: (string) Override the default content set in link element
      * - disable_dev_comments: (bool) Disable dev html comments in dev mode
+     * - template: (string) The name on an twig templates that renders a single link. Default: syndication_link_default
      */
     public function render(SyndicationLink $link, array $options = []): string
     {
@@ -93,11 +111,27 @@ class SyndicationLinkRenderer
             $renderedAttributes .= $key.'="'.$value.'" ';
         }
 
+        $template = $this->twigTemplateLocator->getTemplatePath('syndication_link_default');
+
+        if (isset($options['template']) && \is_string($options['template'])) {
+            try {
+                $template = $this->twigTemplateLocator->getTemplatePath($options['template']);
+            } catch (TemplateNotFoundException $e) {
+                if ($this->kernel->isDebug()) {
+                    throw $e;
+                }
+                trigger_error($e->getMessage(), E_USER_WARNING);
+            }
+        }
+
         $content = isset($options['content']) ? $options['content'] : $link->getContent();
 
-        $result = sprintf('<a %s>%s</a>',
-            $renderedAttributes,
-            $content);
+        $result = $this->twig->render($template, [
+            'attributes' => $attributes,
+            'renderedAttributes' => $renderedAttributes,
+            'content' => $content,
+            'link' => $link,
+        ]);
 
         if ($this->kernel->isDebug() && (!isset($options['disable_dev_comments']) || false === $options['disable_dev_comments'])) {
             $result = "\n<!-- SYNDICATION LINK -->\n$result\n<!-- END SYNDICATION LINK -->\n";

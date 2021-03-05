@@ -12,11 +12,11 @@ use Contao\Model;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementData;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementResult;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
-use HeimrichHannot\HeadBundle\Tag\Meta\MetaDescription;
 use HeimrichHannot\SyndicationTypeBundle\Dca\SyndicationTypeDcaProvider;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationType\ExportSyndicationHandler;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -31,10 +31,6 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
      */
     protected $linkProviderGenerator;
     /**
-     * @var MetaDescription
-     */
-    protected $metaDescription;
-    /**
      * @var SyndicationLinkRenderer
      */
     protected $linkRenderer;
@@ -46,17 +42,22 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
      * @var RequestStack
      */
     protected $requestStack;
+    /**
+     * @var ExportSyndicationHandler
+     */
+    protected $exportSyndicationHandler;
 
     /**
      * SyndicationConfigElementType constructor.
      */
-    public function __construct(SyndicationTypeCollection $typeCollection, SyndicationLinkProviderGenerator $linkProviderGenerator, SyndicationLinkRenderer $linkRenderer, SyndicationTypeDcaProvider $dcaFieldProvider, RequestStack $requestStack)
+    public function __construct(SyndicationTypeCollection $typeCollection, SyndicationLinkProviderGenerator $linkProviderGenerator, SyndicationLinkRenderer $linkRenderer, SyndicationTypeDcaProvider $dcaFieldProvider, RequestStack $requestStack, ExportSyndicationHandler $exportSyndicationHandler)
     {
         $this->typeCollection = $typeCollection;
         $this->linkProviderGenerator = $linkProviderGenerator;
         $this->linkRenderer = $linkRenderer;
         $this->dcaFieldProvider = $dcaFieldProvider;
         $this->requestStack = $requestStack;
+        $this->exportSyndicationHandler = $exportSyndicationHandler;
     }
 
     public static function getType(): string
@@ -72,17 +73,19 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
         $palette .= $appendPalette;
 
         return $palette;
-
-//        return $prependPalette
-//            .'{config_legend},name,syndicationTemplate,syndicationFacebook,syndicationTwitter,syndicationGooglePlus,syndicationLinkedIn,syndicationXing,syndicationMail,syndicationFeedback,syndicationPdf,syndicationPrint,syndicationIcs,syndicationTumblr,syndicationPinterest,syndicationReddit,syndicationWhatsApp;'
-//            .$appendPalette;
     }
 
     public function applyConfiguration(ConfigElementData $configElementData): ConfigElementResult
     {
-        $links = $this->linkProviderGenerator->generateFromContext($this->getSyndicationContext($configElementData->getItemData(), $configElementData->getConfiguration()));
+        $context = $this->getSyndicationContext($configElementData->getItemData(), $configElementData->getConfiguration());
 
-        return new ConfigElementResult(ConfigElementResult::TYPE_FORMATTED_VALUE, $this->linkRenderer->renderProvider($links));
+        if (!$this->exportSyndicationHandler->willRunExportByContext($context)) {
+            $links = $this->linkProviderGenerator->generateFromContext($context);
+
+            return new ConfigElementResult(ConfigElementResult::TYPE_FORMATTED_VALUE, $this->linkRenderer->renderProvider($links));
+        }
+
+        return new ConfigElementResult(ConfigElementResult::TYPE_NONE, null);
     }
 
     public function getSyndicationContext(array $data, Model $configuration): SyndicationContext
