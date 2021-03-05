@@ -16,13 +16,13 @@ use Eluceo\iCal\Component\Event;
 use Exception;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
-use HeimrichHannot\SyndicationTypeBundle\SyndicationType\AbstractSyndicationType;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationType\AbstractExportSyndicationType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class IcsExportSyndication extends AbstractSyndicationType
+class IcsExportSyndication extends AbstractExportSyndicationType
 {
     const PARAM = 'ical';
 
@@ -61,28 +61,6 @@ class IcsExportSyndication extends AbstractSyndicationType
 
     public function generate(SyndicationContext $context): SyndicationLink
     {
-        if ($context->getConfiguration()['id'] == $this->requestStack->getMasterRequest()->get(static::PARAM)) {
-            $data = [
-                'title' => $context->getTitle(),
-                'description' => $context->getContent(),
-                'location' => $this->getValueByFieldOption($context, 'synIcsLocationField'),
-                'startDate' => $this->getValueByFieldOption($context, 'synIcsStartDateField'),
-                'endDate' => $this->getValueByFieldOption($context, 'synIcsEndDateField'),
-            ];
-
-            if (isset($context->getConfiguration()['synIcsAddTime']) && true === (bool) $context->getConfiguration()['synIcsAddTime']) {
-                if (!isset($context->getConfiguration()['synIcsAddTimeField']) || empty($context->getConfiguration()['synIcsAddTimeField'])) {
-                    $data['addTime'] = true;
-                } else {
-                    $data['addTime'] = (bool) $this->getValueByFieldOption($context, 'synIcsAddTimeField', false);
-                }
-                $data['startTime'] = $this->getValueByFieldOption($context, 'synIcsStartTimeField');
-                $data['endTime'] = $this->getValueByFieldOption($context, 'synIcsEndTimeField');
-            }
-
-            $this->exportIcsFile($this->generateIcalFile($context->getUrl(), $data));
-        }
-
         return new SyndicationLink(
             ['application ics'],
             $this->appendGetParameterToUrl($context->getUrl(), static::PARAM, (string) $context->getConfiguration()['id']),
@@ -202,6 +180,34 @@ class IcsExportSyndication extends AbstractSyndicationType
         $calendar->addComponent($event);
 
         return $calendar->render();
+    }
+
+    public function shouldExport(SyndicationContext $context): bool
+    {
+        return $context->getConfiguration()['id'] == $this->requestStack->getMasterRequest()->get(static::PARAM);
+    }
+
+    public function export(SyndicationContext $context): void
+    {
+        $data = [
+            'title' => $context->getTitle(),
+            'description' => $context->getContent(),
+            'location' => $this->getValueByFieldOption($context, 'synIcsLocationField'),
+            'startDate' => $this->getValueByFieldOption($context, 'synIcsStartDateField'),
+            'endDate' => $this->getValueByFieldOption($context, 'synIcsEndDateField'),
+        ];
+
+        if (isset($context->getConfiguration()['synIcsAddTime']) && true === (bool) $context->getConfiguration()['synIcsAddTime']) {
+            if (!isset($context->getConfiguration()['synIcsAddTimeField']) || empty($context->getConfiguration()['synIcsAddTimeField'])) {
+                $data['addTime'] = true;
+            } else {
+                $data['addTime'] = (bool) $this->getValueByFieldOption($context, 'synIcsAddTimeField', false);
+            }
+            $data['startTime'] = $this->getValueByFieldOption($context, 'synIcsStartTimeField');
+            $data['endTime'] = $this->getValueByFieldOption($context, 'synIcsEndTimeField');
+        }
+
+        $this->exportIcsFile($this->generateIcalFile($context->getUrl(), $data));
     }
 
     protected function exportIcsFile(string $icsSource)

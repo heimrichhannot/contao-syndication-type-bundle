@@ -14,13 +14,12 @@ use Contao\Environment;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory;
-use HeimrichHannot\SyndicationTypeBundle\SyndicationType\AbstractSyndicationType;
-use HeimrichHannot\SyndicationTypeBundle\SyndicationType\ExportSyndicationTypeInterface;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationType\AbstractExportSyndicationType;
 use HeimrichHannot\TwigSupportBundle\Template\TwigFrontendTemplate;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class PrintSyndicationType extends AbstractSyndicationType implements ExportSyndicationTypeInterface
+class PrintSyndicationType extends AbstractExportSyndicationType
 {
     const PARAM = 'synPrint';
     const PARAM_DEBUG = 'synPrintDebug';
