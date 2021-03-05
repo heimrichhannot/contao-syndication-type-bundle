@@ -8,15 +8,10 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType;
 
-abstract class AbstractExportSyndicationType extends AbstractSyndicationType
+abstract class AbstractExportSyndicationType extends AbstractSyndicationType implements ExportSyndicationTypeInterface
 {
-    abstract public static function getParameter(): string;
-
-    public function doExport(): void
+    public function getCategory(): string
     {
-        if ($context->getData()['id'] == $this->requestStack->getMasterRequest()->get(static::PARAM)) {
-        }
+        return static::CATEGORY_EXPORT;
     }
-
-    abstract protected function export(): void;
 }

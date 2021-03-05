@@ -9,13 +9,14 @@
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType\Concrete;
 
 use Contao\Config;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\Environment;
-use Contao\FrontendTemplate;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\AbstractSyndicationType;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\ExportSyndicationTypeInterface;
+use HeimrichHannot\TwigSupportBundle\Template\TwigFrontendTemplate;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -59,13 +60,13 @@ class PrintSyndicationType extends AbstractSyndicationType implements ExportSynd
         $attributes = [
             'class' => 'print',
         ];
-        $href = '#';
+        $href = 'javascript:void(0);';
 
         if ($context->getConfiguration()['synUsePrintTemplate']) {
             $attributes['target'] = '_blank';
-            $href = $this->appendGetParameterToUrl($context->getUrl(), static::PARAM, (string) $context->getConfiguration()['id']);
+            $href = $this->appendGetParameterToUrl($context->getUrl(), static::PARAM, (string) $context->getData()['id']);
         } else {
-            $attributes['onclick'] = 'window.print();return false';
+            $attributes['onclick'] = 'window.print();return false;';
         }
 
         return $this->linkFactory->create(
@@ -94,11 +95,13 @@ class PrintSyndicationType extends AbstractSyndicationType implements ExportSynd
             'window.print();%s',
             (bool) $this->requestStack->getMasterRequest()->get(static::PARAM_DEBUG) ? '' : 'setTimeout(window.close, 0);'
         );
-        $data['title'] = $context->getTitle();
+        $data['title'] = $data['title'] ?: $context->getTitle();
+        $data['content'] = $data['content'] ?: $context->getContent();
 
-        $template = new FrontendTemplate($context->getConfiguration()['synPrintTemplate']);
+        $template = new TwigFrontendTemplate($context->getConfiguration()['synPrintTemplate']);
         $template->setData($data);
+        $template->isSyndicationExportTemplate = true;
 
-        echo 'Print';
+        throw new ResponseException($template->getResponse());
     }
 }

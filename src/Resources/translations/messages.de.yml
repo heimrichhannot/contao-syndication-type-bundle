@@ -59,3 +59,12 @@ huh.syndication_type:
     synAddTwitter:
       name: "Twitter-Syndikation aktivieren"
       description: "Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Twitter."
+    synAddPrint:
+      name: "Druck-Syndikation aktivieren"
+      description: "Aktivieren Sie diese Syndikation, um eine Druck-Möglichkeit anzubieten."
+    synUsePrintTemplate:
+      name: "Druck-Template verwenden"
+      description: "Aktivieren, um ein Template für die Druck-Ausgabe zu nutzen, anstatt die vollständige Seite zu drucken."
+    synPrintTemplate:
+      name: "Druck-Template"
+      description: "Wählen Sie hier ein Template für die Druck-Ausgabe aus."

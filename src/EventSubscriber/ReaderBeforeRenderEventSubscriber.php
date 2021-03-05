@@ -12,7 +12,7 @@ use HeimrichHannot\ReaderBundle\Event\ReaderBeforeRenderEvent;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use HeimrichHannot\SyndicationTypeBundle\ConfigElementType\SyndicationConfigElementType;
-use HeimrichHannot\SyndicationTypeBundle\ExportSyndication\ExportSyndicationHandler;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationType\ExportSyndicationHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ReaderBeforeRenderEventSubscriber implements EventSubscriberInterface

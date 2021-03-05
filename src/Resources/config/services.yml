@@ -2,7 +2,9 @@ services:
   _defaults:
     autowire: true
 
-  HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection: ~
+  HeimrichHannot\SyndicationTypeBundle\SyndicationType\:
+    resource: '../../SyndicationType/*'
+    exclude: '../../SyndicationType/{Concrete,ExportSyndicationContext.php}'
 
   HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory: ~
   HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator: ~

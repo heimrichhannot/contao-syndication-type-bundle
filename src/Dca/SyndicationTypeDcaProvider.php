@@ -8,12 +8,12 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\Dca;
 
-use Contao\Controller;
 use HeimrichHannot\SyndicationTypeBundle\Event\AddSyndicationTypeFieldsEvent;
 use HeimrichHannot\SyndicationTypeBundle\Event\AddSyndicationTypePaletteSelectorsEvent;
 use HeimrichHannot\SyndicationTypeBundle\Event\AddSyndicationTypeSubpalettesEvent;
 use HeimrichHannot\SyndicationTypeBundle\EventListener\Dca\FieldOptionsCallbackListener;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection;
+use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -31,12 +31,17 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
      * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
+    /**
+     * @var TwigTemplateLocator
+     */
+    protected $templateLocator;
 
-    public function __construct(SyndicationTypeCollection $typeCollection, TranslatorInterface $translator, EventDispatcherInterface $eventDispatcher)
+    public function __construct(SyndicationTypeCollection $typeCollection, TranslatorInterface $translator, EventDispatcherInterface $eventDispatcher, TwigTemplateLocator $templateLocator)
     {
         $this->typeCollection = $typeCollection;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
+        $this->templateLocator = $templateLocator;
     }
 
     public function prepareDca(string $table): void
@@ -230,10 +235,16 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
             if ($splitByCategories) {
                 $palette .= '{'.$category.'_legend},';
             }
-            $palette .= implode(',', $fields).';';
+            $palette .= implode(',', $fields);
+
+            if ($splitByCategories) {
+                $palette .= ';';
+            } else {
+                $palette .= ',';
+            }
         }
 
-        if (!$splitByCategories) {
+        if ($splitByCategories) {
             $palette = '{syndication_type_legend},'.$palette;
         }
 
@@ -260,8 +271,9 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
 
     protected function addTemplateSelectField(string $fieldName, array &$fields, string $templateGroup): void
     {
-        $this->addSelectField($fieldName, $fields, ['options_callback' => function ($dc) use ($templateGroup) {
-            return Controller::getTemplateGroup($templateGroup);
+        $templateLocator = $this->templateLocator;
+        $this->addSelectField($fieldName, $fields, ['options_callback' => function ($dc) use ($templateGroup, $templateLocator) {
+            return $templateLocator->getTemplateGroup($templateGroup);
         }]);
     }
 

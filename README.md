@@ -33,15 +33,79 @@ This bundle brings an extendable syndication framework to contao. Syndication ca
 
 ## Developers
 
-### Add syndications a custom data container
+### Add syndications to your bundle
 
-1. Add fields with `SyndicationTypeDcaProvider` service to your dca
-1. Generate syndication links in your module/content element/controller/eventlistener/etc. with `SyndicationLinkProviderGenerator`. 
-1. Render links with bundled `SyndicationLinkRenderer` or a custom renderer
+Syndication bundle is build to be reused. You can easily add it to your code.
+
+1. Add all needed fields to your dca
+    - We recommend creating a listener to the loadDataContainer Hook 
+    - Add fields and configuration with `SyndicationTypeDcaProvider::prepareDca($table)`
+    - Generate the palette with `SyndicationTypeDcaProvider::getPalette()` and place it where it should be. You can pass a boolean parameter to get the palette seperated by legends or not.
+  
+    ```php
+    use HeimrichHannot\SyndicationTypeBundle\Dca\SyndicationTypeDcaProvider;
+    
+    function prepareTable(string $table, SyndicationTypeDcaProvider $syndicationTypeDcaProvider)
+      {
+          $dca = &$GLOBALS['TL_DCA']['tl_article'];
+          $dca['palettes']['default'] = str_replace(
+            'printable', 
+            $syndicationTypeDcaProvider->getPalette(false), 
+            $dca['palettes']['default']
+          );
+          $syndicationTypeDcaProvider->prepareDca($table);
+      }
+    ```
+
+1. Generator syndication links in your controller/module/listener/...
+    - create an instance of `SyndicationContext`
+    - generate syndication links with `SyndicationLinkProviderGenerator::generateFromContext()` (will return a `SyndicationLinkProvider` instance, which is a collection of `SyndicationLink` instances)
+    - render the syndication links with `SyndicationLinkRenderer::renderProvider()` (will return the rendered links as string. You could use/create a custom link renderer)
+
+        ```php
+        use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
+        use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator;
+        use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
+        
+        function addSyndication(array $data, array $configuration, string $url, SyndicationLinkProviderGenerator $linkProviderGenerator, SyndicationLinkRenderer $linkRenderer): string
+        {
+        
+            $context = new SyndicationContext($data['title'], $data['text'], $url, $data, $configuration);
+            $linkProviderGenerator = $linkProviderGenerator->generateFromContext($context);
+            return $linkRenderer->renderProvider($linkProviderGenerator);
+        }
+        ```
+
+1. Add export support.
+    - this should be done, where your content to export is completely configured and fully rendered (or can be fully rendered). In the most cases, this can be done where you generate the syndication links, but maybe it must be done on a later point.
+    - create a `SyndicationContext` instance
+    - run `ExportSyndicationHandler::exportByContext()`
+
+        ```php
+        use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
+        use HeimrichHannot\SyndicationTypeBundle\SyndicationType\ExportSyndicationHandler;
+        
+        function doExport(ExportSyndicationHandler $exportSyndicationHandler, string $title, string $buffer, string $url, array $data, array $configuration)
+        {
+            $context = new SyndicationContext($title, $buffer, $url, $data, $configuration);
+            $exportSyndicationHandler->exportByContext($context); 
+        }
+        ```
 
 ### Add custom syndication type
 
-1. Create a class implementing `SyndicationTypeInterface` (we recommend extending `AbstractSyndicationType`)
+1. Create a SyndicationType class
+   - the class must implement `SyndicationTypeInterface` (or `ExportSyndicationTypeInterface`)
+   - you can (and we recommend) extend `AbstractSyndicationType` or `AbstractExportSyndicationType` (for syndication types which do some export like pdf, print or ical), which already implement their corresponding interfaces
+1. Implement the abstract methods
+   - `getType()` - return an alias for the syndication type
+   - `generate()` - generate the syndication link. A `SyndicationContext` instance is passed, a `SyndicationLink` instance must be returned. We recommend to use `SyndicationLinkFactory` to create the `SyndicationLink` instance.
+1. Optional: If your SyndicationType extends one of the abstract classes, your can override following methods:
+   - `getCategory()` - customize the syndication category. There are two categories predefined as constants in `AbstractSyndicationType`: `share` and `export`, but it is possible to use a custom category
+   - `getPalette()` - if your syndication type depends on additions configuration, you can set the syndication type palette here
+1. Optional: If your SyndicationType extends one of the abstract classes, your can use the following helper methods:
+   - `getValueByFieldOption()` - return a configuration value from the context (shorthand so you don't have to do all the array validation)
+   - `appendGetParameterToUrl()` - utils to append a get parameter to an url. Useful for creating export links
 1. Register service type class as service with `huh.syndication_type.type` service tag
 1. Create a Event Subscriber for `AddSyndicationTypeFieldsEvent`,`AddSyndicationTypePaletteSelectorsEvent` and `AddSyndicationTypeSubpalettesEvent` to add custom dca fields and subpalettes
 

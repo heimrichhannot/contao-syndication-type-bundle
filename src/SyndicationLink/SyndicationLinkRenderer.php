@@ -26,6 +26,49 @@ class SyndicationLinkRenderer
     }
 
     /**
+     * Render all links in an provider.
+     *
+     * Options:
+     * - rel: (string) Only render links with given relationship
+     * - disable_dev_comments: (bool) Disable dev html comments in dev mode
+     * - prepend: (string) Will be prepended before the rendered links. Could be for example a headline or an open tag.
+     * - append: (string) Will be appended after the rendered links. Could be for example a clearfix or an closing tag.
+     * - disable_indexer_comments: (bool) Disable indexer::stop and indexer::continue comments
+     */
+    public function renderProvider(SyndicationLinkProvider $provider, array $options = []): string
+    {
+        $result = '';
+
+        if (isset($options['rel'])) {
+            $links = $provider->getLinksByRel($options['rel']);
+        } else {
+            $links = $provider->getLinks();
+        }
+
+        foreach ($links as $link) {
+            $result .= $this->render($link, ['disable_dev_comments' => true]);
+        }
+
+        if (isset($options['prepend']) && \is_string($options['prepend'])) {
+            $result = $options['prepend'].$result;
+        }
+
+        if (isset($options['append']) && \is_string($options['append'])) {
+            $result = $result.$options['append'];
+        }
+
+        if ($this->kernel->isDebug() && (!isset($options['disable_dev_comments']) || false === $options['disable_dev_comments'])) {
+            $result = "\n<!-- SYNDICATION LINKS -->\n$result\n<!-- END SYNDICATION LINKS -->\n";
+        }
+
+        if (!isset($options['disable_indexer_comments']) || true !== $options['disable_indexer_comments']) {
+            $result = "\n<!-- indexer::stop -->\n".$result."\n<!-- indexer::continue -->\n";
+        }
+
+        return $result;
+    }
+
+    /**
      * Render a syndication link element.
      *
      * Options:
@@ -58,44 +101,6 @@ class SyndicationLinkRenderer
 
         if ($this->kernel->isDebug() && (!isset($options['disable_dev_comments']) || false === $options['disable_dev_comments'])) {
             $result = "\n<!-- SYNDICATION LINK -->\n$result\n<!-- END SYNDICATION LINK -->\n";
-        }
-
-        return $result;
-    }
-
-    /**
-     * Render all links in an provider.
-     *
-     * Options:
-     * - rel: (string) Only render links with given relationship
-     * - disable_dev_comments: (bool) Disable dev html comments in dev mode
-     * - prepend: (string) Will be prepended before the rendered links. Could be for example a headline or an open tag.
-     * - append: (string) Will be appended after the rendered links. Could be for example a clearfix or an closing tag.
-     */
-    public function renderProvider(SyndicationLinkProvider $provider, array $options = []): string
-    {
-        $result = '';
-
-        if (isset($options['rel'])) {
-            $links = $provider->getLinksByRel($options['rel']);
-        } else {
-            $links = $provider->getLinks();
-        }
-
-        foreach ($links as $link) {
-            $result .= $this->render($link, ['disable_dev_comments' => true]);
-        }
-
-        if (isset($options['prepend']) && \is_string($options['prepend'])) {
-            $result = $options['prepend'].$result;
-        }
-
-        if (isset($options['append']) && \is_string($options['append'])) {
-            $result = $result.$options['append'];
-        }
-
-        if ($this->kernel->isDebug() && (!isset($options['disable_dev_comments']) || false === $options['disable_dev_comments'])) {
-            $result = "\n<!-- SYNDICATION LINKS -->\n$result\n<!-- END SYNDICATION LINKS -->\n";
         }
 
         return $result;

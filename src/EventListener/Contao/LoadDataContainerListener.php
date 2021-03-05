@@ -36,7 +36,17 @@ class LoadDataContainerListener
         switch ($table) {
             case 'tl_reader_config_element':
                 $this->prepareReaderConfigElementTable($table);
+                // no break
+            case 'tl_article':
+                $this->prepareArticleTable($table);
         }
+    }
+
+    public function prepareArticleTable(string $table)
+    {
+        $dca = &$GLOBALS['TL_DCA']['tl_article'];
+        $dca['palettes']['default'] = str_replace('printable', $this->syndicationTypeDcaProvider->getPalette(false), $dca['palettes']['default']);
+        $this->syndicationTypeDcaProvider->prepareDca($table);
     }
 
     protected function prepareReaderConfigElementTable(string $table)
