@@ -8,8 +8,11 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\EventListener\Contao;
 
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use HeimrichHannot\SyndicationTypeBundle\Dca\ConfigElementTypeDcaProvider;
 use HeimrichHannot\SyndicationTypeBundle\Dca\SyndicationTypeDcaProvider;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class LoadDataContainerListener
 {
@@ -25,15 +28,30 @@ class LoadDataContainerListener
      * @var array
      */
     protected $bundleConfig;
+    /**
+     * @var RequestStack
+     */
+    protected $requestStack;
+    /**
+     * @var ScopeMatcher
+     */
+    protected $scopeMatcher;
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
 
     /**
      * LoadDataContainerListener constructor.
      */
-    public function __construct(SyndicationTypeDcaProvider $syndicationTypeDcaProvider, ConfigElementTypeDcaProvider $configElementTypeDcaProvider, array $bundleConfig)
+    public function __construct(SyndicationTypeDcaProvider $syndicationTypeDcaProvider, ConfigElementTypeDcaProvider $configElementTypeDcaProvider, array $bundleConfig, RequestStack $requestStack, ScopeMatcher $scopeMatcher, TranslatorInterface $translator)
     {
         $this->syndicationTypeDcaProvider = $syndicationTypeDcaProvider;
         $this->configElementTypeDcaProvider = $configElementTypeDcaProvider;
         $this->bundleConfig = $bundleConfig;
+        $this->requestStack = $requestStack;
+        $this->scopeMatcher = $scopeMatcher;
+        $this->translator = $translator;
     }
 
     public function __invoke(string $table): void
@@ -44,6 +62,10 @@ class LoadDataContainerListener
                 // no break
             case 'tl_article':
                 $this->prepareArticleTable($table);
+        }
+
+        if ($this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest())) {
+            $GLOBALS['TL_CSS']['huh_syndication.backend'] = 'bundles/heimrichhannotsyndicationtype/assets/css/backend.css';
         }
     }
 
@@ -60,5 +82,7 @@ class LoadDataContainerListener
     {
         $this->configElementTypeDcaProvider->prepareDca($table);
         $this->syndicationTypeDcaProvider->prepareDca($table);
+
+        $GLOBALS['TL_LANG'][$table]['config_element_config_legend'] = $this->translator->trans('huh.syndication_type.legends.tl_reader_config_element.config_element_config_legend');
     }
 }

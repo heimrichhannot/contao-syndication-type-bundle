@@ -68,3 +68,16 @@ huh.syndication_type:
     synPrintTemplate:
       name: "Druck-Template"
       description: "Wählen Sie hier ein Template für die Druck-Ausgabe aus."
+    synPrintUseCustomEncoreEntries:
+      name: "Benutzerdefinierte Encore-Entries verwenden"
+      description: "Nutzen Sie diese Optionen, um die Encore-Entries der Seite mit benutzerdefinierten Entries zu überschreiben."
+    synPrintCustomEncoreEntries:
+      name: "Benutzerdefinierte Encore-Entries"
+      description: "Wählen Sie die Encore-Entries aus, welche im Druck-Layout verwendet werden sollen."
+
+  legends:
+    syndication_categories:
+      export_legend: "Export-Syndikationen"
+      share_legend: "Teilen-Syndikationen"
+    tl_reader_config_element:
+      config_element_config_legend: "Leserkonfigurationen-Einstellungen"

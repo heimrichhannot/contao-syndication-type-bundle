@@ -44,6 +44,11 @@ class ParseTemplateListener
 
     public function __invoke(Template $template): void
     {
+        $this->doExport($template);
+    }
+
+    protected function doExport(Template $template): void
+    {
         if (isset($this->bundleConfig['enable_article_syndication']) && true === $this->bundleConfig['enable_article_syndication']) {
             if ('article' !== $template->type || $template->isSyndicationExportTemplate) {
                 return;

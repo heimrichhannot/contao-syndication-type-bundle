@@ -42,7 +42,7 @@ abstract class AbstractSyndicationType implements SyndicationTypeInterface
 
     protected function getValueByFieldOption(SyndicationContext $context, string $option, ?string $defaultValue = null): ?string
     {
-        if (!isset($context->getConfiguration()[$option]) && !empty($context->getConfiguration()[$option])) {
+        if (!isset($context->getConfiguration()[$option]) || empty($context->getConfiguration()[$option])) {
             return $defaultValue;
         }
 

@@ -15,7 +15,7 @@ use HeimrichHannot\SyndicationTypeBundle\EventListener\Dca\FieldOptionsCallbackL
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection;
 use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class SyndicationTypeDcaProvider extends AbstractDcaProvider
 {
@@ -63,18 +63,25 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
         }
 
         $dca['fields'] = array_merge($dca['fields'] ?: [], $activationFields, $this->getFields(true));
-        $dca['subpalettes'] = array_merge($dca['subpalettes'] ?: [], $subpalettes, $this->getSubpalettes(true));
+        $dca['subpalettes'] = $this->getSubpalettes($subpalettes);
         $dca['palettes']['__selector__'] = array_merge($dca['palettes']['__selector__'] ?: [], $selectors, $this->getPalettesSelectors(true));
+
+        $this->addTranslations($table);
+    }
+
+    public function addTranslations(string $table): void
+    {
+        foreach ($this->typeCollection->getCategories() as $category) {
+            $GLOBALS['TL_LANG'][$table][$category.'_legend'] = $this->translator->trans('huh.syndication_type.legends.syndication_categories.'.$category.'_legend');
+        }
     }
 
     /**
      * @return string[]
      */
-    public function getSubpalettes(bool $skipActivationSubpalettes = false): array
+    public function getSubpalettes(array $subpalettes = []): array
     {
-        $subpalettes = [];
-
-        if (!$skipActivationSubpalettes) {
+        if (empty($subpalettes)) {
             $subpalettes = $this->getActivationSubpalettes();
         }
         $subpalettes = array_merge($subpalettes, $this->getTypeSubpalettes());
@@ -82,10 +89,9 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
         /** @noinspection PhpMethodParametersCountMismatchInspection */
         /** @noinspection PhpParamsInspection */
         /** @var AddSyndicationTypeSubpalettesEvent $event */
-        $event = $this->eventDispatcher->dispatch(AddSyndicationTypeSubpalettesEvent::class, new AddSyndicationTypeSubpalettesEvent());
-        $subpalettes = array_merge($subpalettes, $event->getSubpalettes());
+        $event = $this->eventDispatcher->dispatch(AddSyndicationTypeSubpalettesEvent::class, new AddSyndicationTypeSubpalettesEvent($subpalettes));
 
-        return $subpalettes;
+        return $event->getSubpalettes();
     }
 
     public function getTypeSubpalettes(): array
@@ -157,9 +163,9 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
         /** @noinspection PhpMethodParametersCountMismatchInspection */
         /** @noinspection PhpParamsInspection */
         /** @var AddSyndicationTypeFieldsEvent $event */
-        $event = $this->eventDispatcher->dispatch(AddSyndicationTypeFieldsEvent::class, new AddSyndicationTypeFieldsEvent());
+        $event = $this->eventDispatcher->dispatch(AddSyndicationTypeFieldsEvent::class, new AddSyndicationTypeFieldsEvent($fields, $this));
 
-        return array_merge($fields, $event->getFields());
+        return array_merge($event->getFields());
     }
 
     /**
@@ -251,7 +257,7 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
         return $palette;
     }
 
-    protected function addCheckboxField(string $fieldName, array &$fields, bool $submitOnChange = false): void
+    public function addCheckboxField(string $fieldName, array &$fields, bool $submitOnChange = false): void
     {
         $fields[$fieldName] = [
             'label' => $this->getLabel($fieldName),
@@ -262,14 +268,14 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
         ];
     }
 
-    protected function addFieldSelectField(string $fieldName, array &$fields): void
+    public function addFieldSelectField(string $fieldName, array &$fields): void
     {
         $this->addSelectField($fieldName, $fields, [
             'options_callback' => [FieldOptionsCallbackListener::class, '__invoke'],
         ]);
     }
 
-    protected function addTemplateSelectField(string $fieldName, array &$fields, string $templateGroup): void
+    public function addTemplateSelectField(string $fieldName, array &$fields, string $templateGroup): void
     {
         $templateLocator = $this->templateLocator;
         $this->addSelectField($fieldName, $fields, ['options_callback' => function ($dc) use ($templateGroup, $templateLocator) {
@@ -277,7 +283,7 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
         }]);
     }
 
-    protected function addSelectField(string $fieldName, array &$fields, array $config): void
+    public function addSelectField(string $fieldName, array &$fields, array $config): void
     {
         $fields[$fieldName] = [
             'label' => $this->getLabel($fieldName),

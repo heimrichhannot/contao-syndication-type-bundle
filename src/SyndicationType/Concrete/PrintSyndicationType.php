@@ -11,15 +11,20 @@ namespace HeimrichHannot\SyndicationTypeBundle\SyndicationType\Concrete;
 use Contao\Config;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\Environment;
+use Contao\StringUtil;
+use HeimrichHannot\EncoreBundle\Asset\EntrypointCollectionFactory;
+use HeimrichHannot\EncoreBundle\Asset\TemplateAssetGenerator;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\AbstractExportSyndicationType;
 use HeimrichHannot\TwigSupportBundle\Template\TwigFrontendTemplate;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class PrintSyndicationType extends AbstractExportSyndicationType
+class PrintSyndicationType extends AbstractExportSyndicationType implements ServiceSubscriberInterface
 {
     const PARAM = 'synPrint';
     const PARAM_DEBUG = 'synPrintDebug';
@@ -36,12 +41,17 @@ class PrintSyndicationType extends AbstractExportSyndicationType
      * @var RequestStack
      */
     protected $requestStack;
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
-    public function __construct(SyndicationLinkFactory $linkFactory, TranslatorInterface $translator, RequestStack $requestStack)
+    public function __construct(ContainerInterface $container, SyndicationLinkFactory $linkFactory, TranslatorInterface $translator, RequestStack $requestStack)
     {
         $this->linkFactory = $linkFactory;
         $this->translator = $translator;
         $this->requestStack = $requestStack;
+        $this->container = $container;
     }
 
     public static function getType(): string
@@ -101,6 +111,25 @@ class PrintSyndicationType extends AbstractExportSyndicationType
         $template->setData($data);
         $template->isSyndicationExportTemplate = true;
 
+        if ($this->container->has('HeimrichHannot\EncoreBundle\Asset\EntrypointCollectionFactory')) {
+            $useEncore = (bool) $context->getConfiguration()['synPrintUseCustomEncoreEntries'] ?? false;
+
+            if ($useEncore && !empty(($entrypoints = array_filter(StringUtil::deserialize($context->getConfiguration()['synPrintCustomEncoreEntries'], true))))) {
+                $collection = $this->container->get(EntrypointCollectionFactory::class)->createCollection($entrypoints);
+                $template->stylesheets = $this->container->get(TemplateAssetGenerator::class)->linkTags($collection);
+                $template->headJavaScript = $this->container->get(TemplateAssetGenerator::class)->headScriptTags($collection);
+                $template->javaScript = $this->container->get(TemplateAssetGenerator::class)->scriptTags($collection);
+            }
+        }
+
         throw new ResponseException($template->getResponse());
+    }
+
+    public static function getSubscribedServices()
+    {
+        return [
+            '?HeimrichHannot\EncoreBundle\Asset\EntrypointCollectionFactory',
+            '?HeimrichHannot\EncoreBundle\Asset\TemplateAssetGenerator',
+        ];
     }
 }

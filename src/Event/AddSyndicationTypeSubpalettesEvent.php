@@ -15,7 +15,15 @@ class AddSyndicationTypeSubpalettesEvent extends Event
     /**
      * @var array
      */
-    protected $subpalettes = [];
+    protected $subpalettes;
+
+    /**
+     * AddSyndicationTypeSubpalettesEvent constructor.
+     */
+    public function __construct(array $subpalettes)
+    {
+        $this->subpalettes = $subpalettes;
+    }
 
     public function getSubpalettes(): array
     {
