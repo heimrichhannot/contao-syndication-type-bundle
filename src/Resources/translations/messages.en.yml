@@ -1,0 +1,37 @@
+huh:
+  syndication_type:
+    types:
+      email:
+        title: Share by email
+      facebook:
+        title: Share on Facebook
+      feedback_email:
+        title: Send feedback via email
+      ical:
+        title: Create a calendar entry as an ICS file
+      twitter:
+        title: Share on Twitter
+      print:
+        title: Print
+    fields:
+      synContentField:
+        name: Content field
+        description: Select the field that contains the content (e.g. a teaser text) for the entity to be shared.
+      synAddEmail:
+        name: Enable email syndication
+        description: Activate syndication to distribute the post via email.
+      synEmailAddress:
+        name: Email recipient
+        description: Enter the recipient email address here.
+      synEmailBody:
+        name: Email content
+        description: Enter the email content here. You can use the placeholders %title% (title), %content% (content excerpt) and %url% (URL), which will be replaced automatically.
+      synEmailSubject:
+        name: E-mail subject
+        description: Enter a subject for the email here. You can use the placeholders %title% (title), %content% (content excerpt) and %url% (URL), which will be replaced automatically.
+    legends:
+      syndication_categories:
+        export_legend: Export  syndicationen
+        share_legend: Share syndicationen
+      tl_reader_config_element:
+        config_element_config_legend: Reader config type settigns

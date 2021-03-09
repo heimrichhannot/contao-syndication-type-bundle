@@ -59,12 +59,18 @@ class LoadDataContainerListener
         switch ($table) {
             case 'tl_reader_config_element':
                 $this->prepareReaderConfigElementTable($table);
-                // no break
+
+                break;
+
             case 'tl_article':
                 $this->prepareArticleTable($table);
+
+                break;
         }
 
-        if ($this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest())) {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if ($request && $this->scopeMatcher->isBackendRequest($request)) {
             $GLOBALS['TL_CSS']['huh_syndication.backend'] = 'bundles/heimrichhannotsyndicationtype/assets/css/backend.css';
         }
     }
