@@ -26,7 +26,7 @@
   },
   "conflict": {
     "heimrichhannot/contao-encore-bundle": "<1.10",
-    "heimrichhannot/contao-reader-bundle": "<1.24.0"
+    "heimrichhannot/contao-reader-bundle": "<1.24"
   },
   "autoload": {
     "psr-4": {
