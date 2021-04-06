@@ -42,12 +42,11 @@ class FacebookSyndicationType extends AbstractSyndicationType
     public function generate(SyndicationContext $context): SyndicationLink
     {
         return $this->linkFactory->create(
-            ['external'],
+            [static::REL_EXTERNAL, static::REL_NOFOLLOW],
             sprintf('https://www.facebook.com/sharer/sharer.php?u=%s&t=%s', rawurlencode($context->getUrl()), rawurlencode($context->getTitle())),
             $this->translator->trans('huh.syndication_type.types.facebook.title'),
             [
                 'class' => 'facebook',
-                'rel' => 'external nofollow',
                 'title' => $this->translator->trans('huh.syndication_type.types.facebook.title'),
                 'target' => '_blank',
                 'onclick' => 'window.open(this.href,\'\',\'width=640,height=380,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false',

@@ -42,12 +42,11 @@ class TwitterSyndicationType extends AbstractSyndicationType
     public function generate(SyndicationContext $context): SyndicationLink
     {
         return $this->linkFactory->create(
-            ['external'],
+            [static::REL_EXTERNAL, static::REL_NOFOLLOW],
             sprintf('https://twitter.com/intent/tweet?url=%s&text=%s', rawurlencode($context->getUrl()), rawurlencode($context->getTitle())),
             $this->translator->trans('huh.syndication_type.types.twitter.title'),
             [
                 'class' => 'twitter',
-                'rel' => 'nofollow',
                 'target' => '_blank',
                 'onclick' => 'window.open(this.href,\'\',\'width=500,height=260,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false',
             ],

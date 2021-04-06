@@ -62,12 +62,11 @@ class IcsExportSyndication extends AbstractExportSyndicationType
     public function generate(SyndicationContext $context): SyndicationLink
     {
         return new SyndicationLink(
-            ['application ics'],
+            [static::REL_NOFOLLOW],
             $this->appendGetParameterToUrl($context->getUrl(), static::PARAM, (string) $context->getConfiguration()['id']),
             $this->translator->trans('huh.syndication_type.types.ical.title'),
             [
                 'class' => 'ics',
-                'rel' => 'nofollow',
                 'title' => $this->translator->trans('huh.syndication_type.types.ical.title'),
             ]
         );

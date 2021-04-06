@@ -58,7 +58,7 @@ class EmailSyndicationType extends AbstractSyndicationType
         ]);
 
         return $this->linkFactory->create(
-            ['external', 'application'],
+            [static::REL_EXTERNAL],
             $href,
             $this->translator->trans('huh.syndication_type.types.email.title'),
             [
