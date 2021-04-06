@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [DEV] - 2021-04-06
+- increased minimium allowed twig support bundle version to 0.2.14
+
 ## [0.2.0] - 2021-04-06
 - added WhatsApp syndication
 - changed: added span to default link template
