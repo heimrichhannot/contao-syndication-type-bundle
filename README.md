@@ -8,7 +8,7 @@ This bundle brings an extendable syndication framework to contao. Syndication ca
     - [Reader Bundle](https://github.com/heimrichhannot/contao-reader-bundle)
 - bundled syndication types:
     - sharing: facebook, email, email feedback, twitter, whatsapp
-    - export: ical
+    - export: ical, print
 - expandable and customizable syndication framework
     - add pdf export through [PDF Creator Bundle](https://github.com/heimrichhannot/contao-pdf-creator-bundle)
 - generated links and link lists implementing [PSR-13](https://www.php-fig.org/psr/psr-13/) `LinkInterface` and `LinkProviderInterface`
@@ -65,10 +65,10 @@ Syndication bundle is build to be reused. You can easily add it to your code.
       }
     ```
 
-1. Generator syndication links in your controller/module/listener/...
+1. Generate syndication links in your controller/module/listener/...
     - create an instance of `SyndicationContext`
     - generate syndication links with `SyndicationLinkProviderGenerator::generateFromContext()` (will return a `SyndicationLinkProvider` instance, which is a collection of `SyndicationLink` instances)
-    - render the syndication links with `SyndicationLinkRenderer::renderProvider()` (will return the rendered links as string. You could use/create a custom link renderer)
+    - render the syndication links with `SyndicationLinkRenderer::renderProvider()` (will return the rendered links as string. You could also use/create a custom link renderer)
 
         ```php
         use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
@@ -115,7 +115,7 @@ Syndication bundle is build to be reused. You can easily add it to your code.
    - `getValueByFieldOption()` - return a configuration value from the context (shorthand so you don't have to do all the array validation)
    - `appendGetParameterToUrl()` - utils to append a get parameter to an url. Useful for creating export links
 1. Register service type class as service with `huh.syndication_type.type` service tag
-1. Create a Event Subscriber for `AddSyndicationTypeFieldsEvent`,`AddSyndicationTypePaletteSelectorsEvent` and `AddSyndicationTypeSubpalettesEvent` to add custom dca fields and subpalettes
+1. Create an Event Subscriber for `AddSyndicationTypeFieldsEvent`,`AddSyndicationTypePaletteSelectorsEvent` and `AddSyndicationTypeSubpalettesEvent` to add custom dca fields and subpalettes
 
 
 ## Configuration reference
