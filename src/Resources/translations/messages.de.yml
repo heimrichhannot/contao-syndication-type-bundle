@@ -13,6 +13,8 @@ huh:
         title: Auf Twitter teilen
       print:
         title: Drucken
+      whatsapp:
+        title: Per WhatsApp teilen
     fields:
       synContentField:
         name: Inhalt-Feld
@@ -80,6 +82,9 @@ huh:
       synPrintCustomEncoreEntries:
         name: Benutzerdefinierte Encore-Entries
         description: Wählen Sie die Encore-Entries aus, welche im Druck-Layout verwendet werden sollen.
+      synAddWhatsapp:
+        name: WhatApp-Syndikation aktivieren
+        description: Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf WhatsApp.
     legends:
       syndication_categories:
         export_legend: Export-Syndikationen

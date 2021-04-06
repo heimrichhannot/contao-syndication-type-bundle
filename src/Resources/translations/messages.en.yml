@@ -13,6 +13,8 @@ huh:
         title: Share on Twitter
       print:
         title: Print
+      whatsapp:
+        title: Share on WhatsApp
     fields:
       synContentField:
         name: Content field
@@ -29,6 +31,9 @@ huh:
       synEmailSubject:
         name: E-mail subject
         description: Enter a subject for the email here. You can use the placeholders %title% (title), %content% (content excerpt) and %url% (URL), which will be replaced automatically.
+      synAddWhatsapp:
+        name: Enable WhatsApp syndication
+        description: Activate syndication to share post on WhatsApp.
     legends:
       syndication_categories:
         export_legend: Export  syndicationen
