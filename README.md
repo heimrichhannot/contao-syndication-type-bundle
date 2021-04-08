@@ -39,6 +39,12 @@ You can replace the contao article syndication with the syndication of this bund
 1. Select syndications
 1. output the template variable in your template (with raw filter)
 
+### Print content
+
+To print your content, you have two options: print the whole page (a simple window.print() link) or use a custom template to print. Print template are written in twig and the file name must start with `syndication_type_print_`, for example `syndication_type_print_default.html.twig`. You can extend [our default](src/Resources/views/syndication/syndication_type_print_default.html.twig) template or create a complete custom template.
+
+While creating you print template, you may want to see a preview without the print popup. To get one, just append `synPrintDebug` parameter to the print url.
+
 ## Developers
 
 ### Add syndications to your bundle
