@@ -65,7 +65,7 @@ class ReaderBeforeRenderEventSubscriber implements EventSubscriberInterface
 
         foreach ($readerConfigElements as $readerConfigElement) {
             $context = $configElementType->getSyndicationContext(
-                array_merge($event->getItem()->getRaw(), ['formatted' => $event->getItem()->getFormatted()]),
+                $event->getTemplateData(),
                 $readerConfigElement
             );
             $this->exportSyndicationHandler->exportByContext($context);
