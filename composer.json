@@ -6,7 +6,7 @@
   "require": {
     "php": "^7.2",
     "contao/core-bundle": "^4.4",
-    "heimrichhannot/contao-twig-support-bundle": "^0.2.15",
+    "heimrichhannot/contao-twig-support-bundle": "^0.2.15|^1.0",
     "psr/container": "^1.0|^2.0",
     "psr/link": "^1.0",
     "symfony/http-foundation": "^3.4|^4.4",
