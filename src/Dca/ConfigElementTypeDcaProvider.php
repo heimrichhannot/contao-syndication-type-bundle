@@ -9,7 +9,7 @@
 namespace HeimrichHannot\SyndicationTypeBundle\Dca;
 
 use HeimrichHannot\SyndicationTypeBundle\EventListener\Dca\FieldOptionsCallbackListener;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ConfigElementTypeDcaProvider extends AbstractDcaProvider
 {

@@ -21,8 +21,8 @@ use HeimrichHannot\SyndicationTypeBundle\SyndicationType\AbstractExportSyndicati
 use HeimrichHannot\TwigSupportBundle\Template\TwigFrontendTemplate;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PrintSyndicationType extends AbstractExportSyndicationType implements ServiceSubscriberInterface
 {

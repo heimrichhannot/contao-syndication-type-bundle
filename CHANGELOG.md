@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.3] - 2021-06-08
+- fixed PrintSyndicatonType and ConfigElementTypeDcaProvider to use correct symdony TranslatorInterface
+
 ## [0.2.2] - 2021-05-10
 - allow twig support bundle ^1.0
 
