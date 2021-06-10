@@ -30,6 +30,10 @@ class Configuration implements ConfigurationInterface
                     ->defaultFalse()
                     ->info('Enable this option to replace the default contao article syndication with syndication type bundle article syndication.')
                 ->end()
+                ->booleanNode('enable_content_syndication')
+                    ->defaultFalse()
+                    ->info('Enable this option to allow new content type for creating syndication content elements.')
+                ->end()
             ->end()
         ;
 
