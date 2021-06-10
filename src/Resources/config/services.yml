@@ -24,6 +24,7 @@ services:
     public: true
     calls:
       - [ setReaderConfigUtil, [ '@?HeimrichHannot\ReaderBundle\Util\ReaderConfigUtil' ] ]
+      - [ setDcaUtil, [ '@?HeimrichHannot\UtilsBundle\Dca\DcaUtil' ]]
 
   HeimrichHannot\SyndicationTypeBundle\EventSubscriber\:
     resource: '../../EventSubscriber/*'
@@ -36,4 +37,3 @@ services:
   HeimrichHannot\SyndicationTypeBundle\ConfigElementType\:
     resource: '../../ConfigElementType/*'
     tags: [ 'huh.reader.config_element_type' ]
-
