@@ -13,11 +13,10 @@ use Contao\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\System;
-use HeimrichHannot\SyndicationTypeBundle\Event\BeforeContentElementParseEvent;
+use HeimrichHannot\SyndicationTypeBundle\Event\BeforeSyndicationContentElementParseEvent;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
-use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -42,11 +41,6 @@ class SyndicationElement extends ContentElement
     protected $syndicationLinkProviderGenerator;
 
     /**
-     * @var SyndicationTypeCollection
-     */
-    protected $syndicationTypeCollection;
-
-    /**
      * @var ScopeMatcher
      */
     protected $scopeMatcher;
@@ -67,7 +61,6 @@ class SyndicationElement extends ContentElement
         $this->syndicationGenerator = System::getContainer()->get(SyndicationLinkProviderGenerator::class);
         $this->syndicationLinkRenderer = System::getContainer()->get(SyndicationLinkRenderer::class);
         $this->syndicationLinkProviderGenerator = System::getContainer()->get(SyndicationLinkProviderGenerator::class);
-        $this->syndicationTypeCollection = System::getContainer()->get(SyndicationTypeCollection::class);
         $this->requestStack = System::getContainer()->get('request_stack');
         $this->scopeMatcher = System::getContainer()->get('contao.routing.scope_matcher');
         $this->eventDispatcher = System::getContainer()->get('event_dispatcher');
@@ -80,6 +73,7 @@ class SyndicationElement extends ContentElement
         }
 
         if ($this->syndicationGenerator) {
+            $syndication = '';
             $title = $this->titleText;
             $content = $this->text;
             $url = $this->requestStack->getMasterRequest()->getUri();
@@ -88,13 +82,17 @@ class SyndicationElement extends ContentElement
 
             /** @noinspection PhpMethodParametersCountMismatchInspection */
             /** @noinspection PhpParamsInspection */
-            /** @var BeforeContentElementParseEvent $event */
-            $event = $this->eventDispatcher->dispatch(BeforeContentElementParseEvent::class, new BeforeContentElementParseEvent($title, $content, $url, $data, $configuration));
+            /** @var BeforeSyndicationContentElementParseEvent $event */
+            $event = $this->eventDispatcher->dispatch(BeforeSyndicationContentElementParseEvent::NAME, new BeforeSyndicationContentElementParseEvent($title, $content, $url, $data, $configuration));
 
             $context = new SyndicationContext($event->getTitle(), $event->getContent(), $event->getUrl(), $event->getData(), $event->getConfiguration());
-            $linkProvider = $this->syndicationLinkProviderGenerator->generateFromContext($context);
 
-            $this->Template->syndication = $this->syndicationLinkRenderer->renderProvider($linkProvider);
+            if ($this->syndicationLinkRenderer && $this->syndicationLinkProviderGenerator) {
+                $linkProvider = $this->syndicationLinkProviderGenerator->generateFromContext($context);
+                $syndication = $this->syndicationLinkRenderer->renderProvider($linkProvider);
+            }
+
+            $this->Template->syndication = $syndication;
         }
 
         return $this->Template->parse();
