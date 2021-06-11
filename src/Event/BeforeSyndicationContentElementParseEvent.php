@@ -10,8 +10,10 @@ namespace HeimrichHannot\SyndicationTypeBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-class BeforeContentElementParseEvent extends Event
+class BeforeSyndicationContentElementParseEvent extends Event
 {
+    public const NAME = 'huh.syndication_type.before_syndication_content_element_parse';
+
     /**
      * @var string
      */
