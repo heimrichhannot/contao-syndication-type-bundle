@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2021-06-14
+- added content element syndication type(#1)
+
 ## [0.2.4] - 2021-06-11
 - fixed SyndicationTypeDcaProvider not to override all subpalettes
 
