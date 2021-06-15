@@ -72,28 +72,26 @@ class SyndicationElement extends ContentElement
             $this->Template = new BackendTemplate($this->strTemplate);
         }
 
-        if ($this->syndicationGenerator) {
-            $syndication = '';
-            $title = $this->titleText;
-            $content = $this->text;
-            $url = $this->requestStack->getMasterRequest()->getUri();
-            $data = $this->Template->getData();
-            $configuration = $this->getModel()->row();
+        $syndication = '';
+        $title = $this->titleText ?: '';
+        $content = $this->text ?: '';
+        $url = $this->requestStack->getMasterRequest()->getUri();
+        $data = $this->Template->getData();
+        $configuration = $this->getModel()->row();
 
-            /** @noinspection PhpMethodParametersCountMismatchInspection */
-            /** @noinspection PhpParamsInspection */
-            /** @var BeforeSyndicationContentElementParseEvent $event */
-            $event = $this->eventDispatcher->dispatch(BeforeSyndicationContentElementParseEvent::NAME, new BeforeSyndicationContentElementParseEvent($title, $content, $url, $data, $configuration));
+        /** @noinspection PhpMethodParametersCountMismatchInspection */
+        /** @noinspection PhpParamsInspection */
+        /** @var BeforeSyndicationContentElementParseEvent $event */
+        $event = $this->eventDispatcher->dispatch(BeforeSyndicationContentElementParseEvent::NAME, new BeforeSyndicationContentElementParseEvent($title, $content, $url, $data, $configuration));
 
-            $context = new SyndicationContext($event->getTitle(), $event->getContent(), $event->getUrl(), $event->getData(), $event->getConfiguration());
+        $context = new SyndicationContext($event->getTitle(), $event->getContent(), $event->getUrl(), $event->getData(), $event->getConfiguration());
 
-            if ($this->syndicationLinkRenderer && $this->syndicationLinkProviderGenerator) {
-                $linkProvider = $this->syndicationLinkProviderGenerator->generateFromContext($context);
-                $syndication = $this->syndicationLinkRenderer->renderProvider($linkProvider);
-            }
-
-            $this->Template->syndication = $syndication;
+        if ($this->syndicationLinkRenderer && $this->syndicationLinkProviderGenerator) {
+            $linkProvider = $this->syndicationLinkProviderGenerator->generateFromContext($context);
+            $syndication = $this->syndicationLinkRenderer->renderProvider($linkProvider);
         }
+
+        $this->Template->syndication = $syndication;
 
         return $this->Template->parse();
     }

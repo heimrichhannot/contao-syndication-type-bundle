@@ -10,6 +10,7 @@ namespace HeimrichHannot\SyndicationTypeBundle\EventListener\Contao;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use HeimrichHannot\SyndicationTypeBundle\ContentElement\SyndicationElement;
+use HeimrichHannot\SyndicationTypeBundle\DataContainer\ContentContainer;
 use HeimrichHannot\SyndicationTypeBundle\Dca\ConfigElementTypeDcaProvider;
 use HeimrichHannot\SyndicationTypeBundle\Dca\SyndicationTypeDcaProvider;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -103,11 +104,32 @@ class LoadDataContainerListener
         if (isset($this->bundleConfig['enable_content_syndication']) && true === $this->bundleConfig['enable_content_syndication']) {
             $dca = &$GLOBALS['TL_DCA']['tl_content'];
             $dca['palettes'][SyndicationElement::TYPE] = '{type_legend},type;{template_legend:hide},customTpl;{syndication_config_legend},titleText,text;'.$this->syndicationTypeDcaProvider->getPalette(true);
-            $dca['fields']['text']['label'] = $GLOBALS['TL_LANG']['tl_page']['description'];
-            $dca['fields']['titleText']['label'] = $GLOBALS['TL_LANG']['tl_page']['pageTitle'];
-            $dca['fields']['titleText']['eval']['tl_class'] = 'w50 clr';
-            $dca['fields']['text']['eval']['tl_class'] = 'clr';
+            $dca['config']['onload_callback'][] = [ContentContainer::class, 'onloadCallback'];
             $this->syndicationTypeDcaProvider->prepareDca($table);
+            $this->adjustSyndicationFields();
         }
+    }
+
+    protected function adjustSyndicationFields()
+    {
+        $dca = &$GLOBALS['TL_DCA']['tl_content'];
+        $dca['subpalettes']['synIcsAddTime'] = 'synIcsStartTimeField,synIcsEndTimeField';
+        $dca['fields']['synIcsLocationField']['inputType'] = 'text';
+
+        $dca['fields']['synIcsStartDateField']['inputType'] = 'text';
+        $dca['fields']['synIcsStartDateField']['eval'] = ['rgxp' => 'date', 'datepicker' => true, 'tl_class' => 'w50 wizard'];
+        $dca['fields']['synIcsStartDateField']['sql'] = "varchar(10) NOT NULL default ''";
+
+        $dca['fields']['synIcsEndDateField']['inputType'] = 'text';
+        $dca['fields']['synIcsEndDateField']['eval'] = ['rgxp' => 'date', 'datepicker' => true, 'tl_class' => 'w50 wizard'];
+        $dca['fields']['synIcsEndDateField']['sql'] = "varchar(10) NOT NULL default ''";
+
+        $dca['fields']['synIcsStartTimeField']['inputType'] = 'text';
+        $dca['fields']['synIcsStartTimeField']['eval'] = ['rgxp' => 'time', 'datepicker' => true, 'tl_class' => 'w50 wizard'];
+        $dca['fields']['synIcsStartTimeField']['sql'] = "varchar(10) NOT NULL default ''";
+
+        $dca['fields']['synIcsEndTimeField']['inputType'] = 'text';
+        $dca['fields']['synIcsEndTimeField']['eval'] = ['rgxp' => 'time', 'datepicker' => true, 'tl_class' => 'w50 wizard'];
+        $dca['fields']['synIcsEndTimeField']['sql'] = "varchar(10) NOT NULL default ''";
     }
 }

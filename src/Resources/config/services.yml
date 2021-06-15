@@ -16,6 +16,10 @@ services:
     resource: '../../{Dca,ExportSyndication}/*'
     public: true
 
+  HeimrichHannot\SyndicationTypeBundle\DataContainer\:
+    resource: '../../DataContainer/*'
+    public: true
+
   HeimrichHannot\SyndicationTypeBundle\EventListener\Contao\:
     resource: '../../EventListener/Contao/*'
     public: true
@@ -24,7 +28,6 @@ services:
     public: true
     calls:
       - [ setReaderConfigUtil, [ '@?HeimrichHannot\ReaderBundle\Util\ReaderConfigUtil' ] ]
-      - [ setDcaUtil, [ '@?HeimrichHannot\UtilsBundle\Dca\DcaUtil' ]]
 
   HeimrichHannot\SyndicationTypeBundle\EventSubscriber\:
     resource: '../../EventSubscriber/*'

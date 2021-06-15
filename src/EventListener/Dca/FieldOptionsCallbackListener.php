@@ -10,7 +10,6 @@ namespace HeimrichHannot\SyndicationTypeBundle\EventListener\Dca;
 
 use Contao\DataContainer;
 use HeimrichHannot\ReaderBundle\Util\ReaderConfigUtil;
-use HeimrichHannot\UtilsBundle\Dca\DcaUtil;
 
 class FieldOptionsCallbackListener
 {
@@ -18,11 +17,6 @@ class FieldOptionsCallbackListener
      * @var ReaderConfigUtil
      */
     protected $readerConfigUtil;
-
-    /**
-     * @var DcaUtil
-     */
-    protected $dcaUtil;
 
     /**
      * FieldOptionsCallbackListener constructor.
@@ -44,11 +38,6 @@ class FieldOptionsCallbackListener
                 }
 
                 break;
-
-            case'tl_content':
-                if ($this->dcaUtil) {
-                    return $this->dcaUtil->getFields($dc->table, []);
-                }
         }
 
         return [];
@@ -57,10 +46,5 @@ class FieldOptionsCallbackListener
     public function setReaderConfigUtil(ReaderConfigUtil $readerConfigUtil): void
     {
         $this->readerConfigUtil = $readerConfigUtil;
-    }
-
-    public function setDcaUtil(DcaUtil $dcaUtil): void
-    {
-        $this->dcaUtil = $dcaUtil;
     }
 }
