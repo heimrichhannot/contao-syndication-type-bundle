@@ -16,6 +16,10 @@ services:
     resource: '../../{Dca,ExportSyndication}/*'
     public: true
 
+  HeimrichHannot\SyndicationTypeBundle\DataContainer\:
+    resource: '../../DataContainer/*'
+    public: true
+
   HeimrichHannot\SyndicationTypeBundle\EventListener\Contao\:
     resource: '../../EventListener/Contao/*'
     public: true
@@ -36,4 +40,3 @@ services:
   HeimrichHannot\SyndicationTypeBundle\ConfigElementType\:
     resource: '../../ConfigElementType/*'
     tags: [ 'huh.reader.config_element_type' ]
-

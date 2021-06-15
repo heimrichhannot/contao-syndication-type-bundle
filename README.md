@@ -5,6 +5,7 @@ This bundle brings an extendable syndication framework to contao. Syndication ca
 ## Features
 - out-of-the-box syndication support for
     - article
+    - content element
     - [Reader Bundle](https://github.com/heimrichhannot/contao-reader-bundle)
 - bundled syndication types:
     - sharing: facebook, email, email feedback, twitter, whatsapp
@@ -32,6 +33,13 @@ You can replace the contao article syndication with the syndication of this bund
 1. Set `huh_syndication_type.enable_article_syndication` to true
 1. Clear your cache and update the database
 1. You'll find the new syndication config in your article configuration
+
+### Content element syndication
+You can add syndication as a content Element to every article.
+
+1. Set `huh_syndication_type.enable_content_syndication` to true
+1. Clear your cache and update the database
+1. You'll find the new syndication type in content element type selection
 
 ### Reader Bundle
 
@@ -132,4 +140,5 @@ huh_syndication_type:
 
     # Enable this option to replace the default contao article syndication with syndication type bundle article syndication.
     enable_article_syndication: false
+    enable_content_syndication: false
 ```

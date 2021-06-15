@@ -1,0 +1,3 @@
+<div class="ce_huh_syndication">
+    <?= $this->syndication ?>
+</div>
