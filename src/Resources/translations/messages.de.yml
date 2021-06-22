@@ -11,6 +11,10 @@ huh:
         title: Kalendereintrag als ICS-Datei erstellen
       twitter:
         title: Auf Twitter teilen
+      xing:
+        title: Auf Xing teilen
+      linked_in:
+        title: Auf LinkedIn teilen
       print:
         title: Drucken
       whatsapp:
@@ -67,6 +71,12 @@ huh:
       synAddTwitter:
         name: Twitter-Syndikation aktivieren
         description: Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Twitter.
+      synAddXing:
+        name: Xing-Syndikation aktivieren
+        description: Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Xing.
+      synAddLinkedin:
+        name: LinkedIn-Syndikation aktivieren
+        description: Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf LinkedIn.
       synAddPrint:
         name: Druck-Syndikation aktivieren
         description: Aktivieren Sie diese Syndikation, um eine Druck-Möglichkeit anzubieten.

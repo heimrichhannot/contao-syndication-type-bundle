@@ -8,7 +8,7 @@ This bundle brings an extendable syndication framework to contao. Syndication ca
     - content element
     - [Reader Bundle](https://github.com/heimrichhannot/contao-reader-bundle)
 - bundled syndication types:
-    - sharing: facebook, email, email feedback, twitter, whatsapp
+    - sharing: facebook, email, email feedback, twitter, whatsapp, xing, linkedin
     - export: ical, print
 - expandable and customizable syndication framework
     - add pdf export through [PDF Creator Bundle](https://github.com/heimrichhannot/contao-pdf-creator-bundle)
