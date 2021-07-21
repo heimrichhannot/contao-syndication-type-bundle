@@ -56,7 +56,7 @@ class IcsExportSyndication extends AbstractExportSyndicationType
 
     public function getPalette(): string
     {
-        return 'synIcsLocationField,synIcsStartDateField,synIcsEndDateField,synIcsAddTime';
+        return 'synIcsStreetField,synIcsPostalField,synIcsCityField,synIcsLocationField,synIcsStartDateField,synIcsEndDateField,synIcsAddTime';
     }
 
     public function generate(SyndicationContext $context): SyndicationLink
@@ -192,6 +192,9 @@ class IcsExportSyndication extends AbstractExportSyndicationType
             'title' => $context->getTitle(),
             'description' => $context->getContent(),
             'location' => $this->getValueByFieldOption($context, 'synIcsLocationField'),
+            'street' => $this->getValueByFieldOption($context, 'synIcsStreetField'),
+            'postal' => $this->getValueByFieldOption($context, 'synIcsPostalField'),
+            'city' => $this->getValueByFieldOption($context, 'synIcsCityField'),
             'startDate' => $this->getValueByFieldOption($context, 'synIcsStartDateField'),
             'endDate' => $this->getValueByFieldOption($context, 'synIcsEndDateField'),
         ];

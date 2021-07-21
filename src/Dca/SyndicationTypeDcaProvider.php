@@ -200,6 +200,9 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
             ],
         ];
 
+        $this->addFieldSelectField('synIcsStreetField', $fields);
+        $this->addFieldSelectField('synIcsCityField', $fields);
+        $this->addFieldSelectField('synIcsPostalField', $fields);
         $this->addFieldSelectField('synIcsLocationField', $fields);
         $this->addFieldSelectField('synIcsStartDateField', $fields);
         $this->addFieldSelectField('synIcsEndDateField', $fields);

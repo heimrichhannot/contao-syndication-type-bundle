@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - 2021-07-21
+- added street, postal and city field select to ics syndication type
+
 ## [0.3.1] - 2021-06-22
 - added new syndication types: xing, linkedin
 - moved content element creation to InitilizeSystemListner
