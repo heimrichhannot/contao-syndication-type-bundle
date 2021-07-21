@@ -45,8 +45,17 @@ huh:
         name: iCal-Syndikation (.ics) aktivieren
         description: Aktivieren Sie die Syndikation für das Hinzufügen eines Links zur Erzeugung von ICS-Termindateien.
       synIcsLocationField:
-        name: Ortsfeld
-        description: Wählen Sie hier das Feld aus, das für den Ort in der ICS-Datei genutzt werden soll.
+        name: Lokalitätsfeld
+        description: Wählen Sie hier das Feld aus, das für die Lokalität in der ICS-Datei genutzt werden soll.
+      synIcsStreetField:
+        name: Straßenfeld
+        description: Wählen Sie hier das Feld aus, das für die Straße in der ICS-Datei genutzt werden soll.
+      synIcsPostalField:
+        name: PLZ-Feld
+        description: Wählen Sie hier das Feld aus, das für die Postleitzahl in der ICS-Datei genutzt werden soll.
+      synIcsCityField:
+        name: Orts-/Stadtfeld
+        description: Wählen Sie hier das Feld aus, das für den Ort/ die Stadt in der ICS-Datei genutzt werden soll.
       synIcsStartDateField:
         name: Startdatumsfeld
         description: Wählen Sie hier das Feld aus, das als Startdatum in der ICS-Datei genutzt werden soll.

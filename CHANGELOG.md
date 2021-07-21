@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.3] - 2021-07-21
+- added render_callback option to `SyndicationLinkRenderer::renderProvider()`
+- added Customize link rendering to readme
+- fixed missing translations for fields introduced in 0.3.2
+
 ## [0.3.2] - 2021-07-21
 - added street, postal and city field select to ics syndication type
 

@@ -48,9 +48,15 @@ class SyndicationLinkRenderer
      * - append: (string) Will be appended after the rendered links. Could be for example a clearfix or an closing tag.
      * - disable_indexer_comments: (bool) Disable indexer::stop and indexer::continue comments
      * - linkTemplate: (string) The name on an twig templates that renders a single link. Default: syndication_link_default
+     * - render_callback: (callable) A custom callback to render a single link instance. Default null
      */
     public function renderProvider(SyndicationLinkProvider $provider, array $options = []): string
     {
+        $defaults = [
+            'render_callback' => null,
+        ];
+        $options = array_merge($defaults, $options);
+
         $result = '';
 
         if (isset($options['rel'])) {
@@ -60,10 +66,17 @@ class SyndicationLinkRenderer
         }
 
         foreach ($links as $link) {
-            $result .= $this->render($link, [
-                'disable_dev_comments' => true,
-                'template' => $options['linkTemplate'] ?? null,
-            ]);
+            if (\is_callable($options['render_callback'])) {
+                $result .= \call_user_func($options['render_callback'], $link, [
+                    'disable_dev_comments' => true,
+                    'template' => $options['linkTemplate'] ?? null,
+                ]);
+            } else {
+                $result .= $this->render($link, [
+                    'disable_dev_comments' => true,
+                    'template' => $options['linkTemplate'] ?? null,
+                ]);
+            }
         }
 
         if (isset($options['prepend']) && \is_string($options['prepend'])) {

@@ -34,6 +34,15 @@ huh:
       synAddWhatsapp:
         name: Enable WhatsApp syndication
         description: Activate syndication to share post on WhatsApp.
+      synIcsStreetField:
+        name: Street field
+        description: Select the field that should be used for the street value in the ical file.
+      synIcsPostalField:
+        name: Postal field
+        description: Select the field that should be used for the postal value in the ical file.
+      synIcsCityField:
+        name: City field
+        description: Select the field that should be used for the city value in the ical file.
     legends:
       syndication_categories:
         export_legend: Export  syndicationen

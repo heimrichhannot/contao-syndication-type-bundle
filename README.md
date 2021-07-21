@@ -55,6 +55,62 @@ While creating you print template, you may want to see a preview without the pri
 
 ## Developers
 
+### Customize link rendering
+
+If you need more control over the output of the link rendering, you have different options:
+
+1. Override the default link template (`syndication_link_default.html.twig`)
+1. Change link template
+
+    Pass a custom link template name to `SyndicationLinkRenderer::renderProvider()` or `SyndicationLinkRenderer::render()`. You can do this by modifing the call of these methodes or decorate the `SyndicationLinkRenderer` service (see next point).
+
+1. Decorate the `SyndicationLinkRenderer` service
+
+    ```yaml
+    # services.yml
+    services:
+      App\Syndication\DecoratedLinkRenderer:
+        decorates: HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer
+    ```
+    
+    ```php
+    use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
+    
+    class DecoratedLinkRenderer extends SyndicationLinkRenderer
+    {
+        protected SyndicationLinkRenderer $inner;
+    
+        public function __construct(SyndicationLinkRenderer $inner)
+        {
+            $this->inner = $inner;
+        }
+    
+        public function renderProvider(SyndicationLinkProvider $provider, array $options = []): string
+        {
+            // Tell the renderProvider method to call the customized render method
+            return $this->inner->renderProvider($provider, array_merge($options, [
+                'render_callback' => [$this, 'render']
+            ]));
+        }
+    
+        public function render(SyndicationLink $link, array $options = []): string
+        {
+            // add or customize link attributes
+            $options['attributes']['class'] = trim(($options['attributes']['class']  ?? '').' btn btn-primary');
+            // don't output template dev comments
+            $options['disable_dev_comments'] = true;
+            // a custom template (pass only the name)
+            $options['template'] = 'a_really_custom_link_template';
+            // override the link content
+            $options['content'] = "Click THIS link!";
+           
+            return $this->inner->render($link, $options);
+        }
+    }
+    ```
+
+
+
 ### Add syndications to your bundle
 
 Syndication bundle is build to be reused. You can easily add it to your code.
