@@ -90,8 +90,8 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
 
     public function getSyndicationContext(array $data, Model $configuration): SyndicationContext
     {
-        $title = $data[$configuration->synTitleField];
-        $description = $data[$configuration->synContentField];
+        $title = $data[$configuration->synTitleField] ?? '';
+        $description = $data[$configuration->synContentField] ?? '';
         $url = $this->requestStack->getMasterRequest()->getUri();
 
         return new SyndicationContext($title, $description, $url, $data, $configuration->row());

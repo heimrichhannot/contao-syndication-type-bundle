@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2021-07-21
+- fixed exception if title or description fields are empty in SyndicationConfigElementType
+
 ## [0.3.3] - 2021-07-21
 - added render_callback option to `SyndicationLinkRenderer::renderProvider()`
 - added Customize link rendering to readme
