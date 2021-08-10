@@ -8,9 +8,14 @@ services:
     resource: '../../SyndicationType/*'
     exclude: '../../SyndicationType/{Concrete,ExportSyndicationContext.php}'
 
-  HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory: ~
-  HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator: ~
-  HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer: ~
+  HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory:
+    public: true
+
+  HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator:
+    public: true
+
+  HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer:
+    public: true
 
   HeimrichHannot\SyndicationTypeBundle\:
     resource: '../../{Dca,ExportSyndication}/*'
