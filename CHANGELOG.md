@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.5] - 2021-08-26
+- Changed: allowed some symfony 5 packages
+- Fixed: hard reader bundle dependency
+- Fixed: added missing symfony/config dependency
+
 ## [0.3.4] - 2021-08-10
 - made services public
 - fixed exception if title or description fields are empty in SyndicationConfigElementType
