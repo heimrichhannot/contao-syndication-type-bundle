@@ -11,7 +11,7 @@ namespace HeimrichHannot\SyndicationTypeBundle\Event;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProvider;
 use Symfony\Component\EventDispatcher\Event;
 
-class BeforeRenderSyndicationLinks extends Event
+class BeforeRenderSyndicationLinksEvent extends Event
 {
     /**
      * @var array

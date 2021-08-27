@@ -8,7 +8,7 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationLink;
 
-use HeimrichHannot\SyndicationTypeBundle\Event\BeforeRenderSyndicationLinks;
+use HeimrichHannot\SyndicationTypeBundle\Event\BeforeRenderSyndicationLinksEvent;
 use HeimrichHannot\TwigSupportBundle\Exception\TemplateNotFoundException;
 use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
 use HeimrichHannot\TwigSupportBundle\Renderer\TwigTemplateRenderer;
@@ -84,8 +84,8 @@ class SyndicationLinkRenderer
             unset($linkRenderOptions['linkTemplate']);
         }
 
-        /** @var BeforeRenderSyndicationLinks $event */
-        $event = $this->eventDispatcher->dispatch(BeforeRenderSyndicationLinks::class, new BeforeRenderSyndicationLinks($links, $provider, $linkRenderOptions, $options));
+        /** @var BeforeRenderSyndicationLinksEvent $event */
+        $event = $this->eventDispatcher->dispatch(BeforeRenderSyndicationLinksEvent::class, new BeforeRenderSyndicationLinksEvent($links, $provider, $linkRenderOptions, $options));
 
         try {
             $template = $this->twigTemplateLocator->getTemplatePath($options['template']);
