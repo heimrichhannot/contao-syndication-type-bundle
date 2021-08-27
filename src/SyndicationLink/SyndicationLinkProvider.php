@@ -27,6 +27,9 @@ class SyndicationLinkProvider implements LinkProviderInterface
         $this->links = $links;
     }
 
+    /**
+     * @return array|SyndicationLink[]|\Psr\Link\LinkInterface[]|\Traversable
+     */
     public function getLinks()
     {
         return $this->links;

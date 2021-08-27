@@ -1,4 +1,6 @@
 # Contao Syndication Type Bundle
+[![Latest Stable Version](https://img.shields.io/packagist/v/heimrichhannot/contao-syndication-type-bundle.svg)](https://packagist.org/packages/heimrichhannot/contao-syndication-type-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/heimrichhannot/contao-syndication-type-bundle.svg)](https://packagist.org/packages/heimrichhannot/contao-syndication-type-bundle)
 
 This bundle brings an extendable syndication framework to contao. Syndication can be easily added to your own bundle/module/element. There are already some bundles/entites supported out-of-the-box (see features section).
 
@@ -25,7 +27,10 @@ This bundle brings an extendable syndication framework to contao. Syndication ca
 ### Install
 
 1. Install with composer or contao manager
-1. Update database
+
+       composer require heimrichhannot/contao-syndication-type-bundle
+
+2. Update database
 
 ### Article syndication
 You can replace the contao article syndication with the syndication of this bundle.
@@ -59,55 +64,86 @@ While creating you print template, you may want to see a preview without the pri
 
 If you need more control over the output of the link rendering, you have different options:
 
-1. Override the default link template (`syndication_link_default.html.twig`)
-1. Change link template
+#### Override or change default templates
 
-    Pass a custom link template name to `SyndicationLinkRenderer::renderProvider()` or `SyndicationLinkRenderer::render()`. You can do this by modifing the call of these methodes or decorate the `SyndicationLinkRenderer` service (see next point).
+You can override following templates (just use the contao template inheritance with twig templates thanks to [Twig Support Bundle](https://github.com/heimrichhannot/contao-twig-support-bundle)):
+- `syndication_provider_default.html.twig`
+- `syndication_link_default.html.twig`
 
-1. Decorate the `SyndicationLinkRenderer` service
+It is also possible to create custom versions like `syndication_provider_acme.html.twig`. To use a custom link template, you can use the `BeforeRenderSyndicationLinks` event, pass the option on SyndicationLinkRenderer methods call or decorate the `SyndicationLinkRenderer` service. Change the provider template can be archived by pass the option on SyndicationLinkRenderer methods call or decorate the `SyndicationLinkRenderer` service.
 
-    ```yaml
-    # services.yml
-    services:
-      App\Syndication\DecoratedLinkRenderer:
-        decorates: HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer
-    ```
-    
-    ```php
-    use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
-    
-    class DecoratedLinkRenderer extends SyndicationLinkRenderer
+#### Use the BeforeRenderSyndicationLinks event
+
+You can customize the options and the links that are rendered through the BeforeRenderSyndicationLinks.
+
+Example (Contao 4.9+):
+
+```php
+namespace Acme\ExampleBundle\EventListener;
+
+use HeimrichHannot\SyndicationTypeBundle\Event\BeforeRenderSyndicationLinksEvent;
+use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
+
+/**
+ * @ServiceTag("kernel.event_listener", event="HeimrichHannot\SyndicationTypeBundle\Event\BeforeRenderSyndicationLinksEvent")
+ */
+class SyndicationBeforeRenderSyndicationLinksEventListener
+{
+    public function __invoke(BeforeRenderSyndicationLinksEvent $event): void
     {
-        protected SyndicationLinkRenderer $inner;
-    
-        public function __construct(SyndicationLinkRenderer $inner)
-        {
-            $this->inner = $inner;
-        }
-    
-        public function renderProvider(SyndicationLinkProvider $provider, array $options = []): string
-        {
-            // Tell the renderProvider method to call the customized render method
-            return $this->inner->renderProvider($provider, array_merge($options, [
-                'render_callback' => [$this, 'render']
-            ]));
-        }
-    
-        public function render(SyndicationLink $link, array $options = []): string
-        {
-            // add or customize link attributes
-            $options['attributes']['class'] = trim(($options['attributes']['class']  ?? '').' btn btn-primary');
-            // don't output template dev comments
-            $options['disable_dev_comments'] = true;
-            // a custom template (pass only the name)
-            $options['template'] = 'a_really_custom_link_template';
-            // override the link content
-            $options['content'] = "Click THIS link!";
-           
-            return $this->inner->render($link, $options);
-        }
+        $options = $event->getLinkRenderOptions();
+        $options['template'] = 'syndication_link_acme';
+        $event->setLinkRenderOptions($options);
     }
-    ```
+}
+```
+
+#### Decorate the `SyndicationLinkRenderer` service
+
+You can customize all options by decorating the `SyndicationLinkRenderer` service. If you're not familiar with that, it sounds complicated, but symfony make it easy and here is a working example (just change namespaces and class names): 
+
+```yaml
+# services.yml
+services:
+  App\Syndication\DecoratedLinkRenderer:
+    decorates: HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer
+```
+
+```php
+use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
+
+class DecoratedLinkRenderer extends SyndicationLinkRenderer
+{
+    protected SyndicationLinkRenderer $inner;
+
+    public function __construct(SyndicationLinkRenderer $inner)
+    {
+        $this->inner = $inner;
+    }
+
+    public function renderProvider(SyndicationLinkProvider $provider, array $options = []): string
+    {
+        // Tell the renderProvider method to call the customized render method
+        return $this->inner->renderProvider($provider, array_merge($options, [
+            'render_callback' => [$this, 'render']
+        ]));
+    }
+
+    public function render(SyndicationLink $link, array $options = []): string
+    {
+        // add or customize link attributes
+        $options['attributes']['class'] = trim(($options['attributes']['class']  ?? '').' btn btn-primary');
+        // don't output template dev comments
+        $options['disable_dev_comments'] = true;
+        // a custom template (pass only the name)
+        $options['template'] = 'a_really_custom_link_template';
+        // override the link content
+        $options['content'] = "Click THIS link!";
+       
+        return $this->inner->render($link, $options);
+    }
+}
+```
 
 
 

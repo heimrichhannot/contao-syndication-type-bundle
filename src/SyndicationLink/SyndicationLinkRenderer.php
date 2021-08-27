@@ -8,10 +8,13 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationLink;
 
+use HeimrichHannot\SyndicationTypeBundle\Event\BeforeRenderSyndicationLinksEvent;
 use HeimrichHannot\TwigSupportBundle\Exception\TemplateNotFoundException;
 use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
+use HeimrichHannot\TwigSupportBundle\Renderer\TwigTemplateRenderer;
+use HeimrichHannot\TwigSupportBundle\Renderer\TwigTemplateRendererConfiguration;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Twig\Environment;
 
 class SyndicationLinkRenderer
 {
@@ -20,40 +23,49 @@ class SyndicationLinkRenderer
      */
     protected $kernel;
     /**
-     * @var Environment
-     */
-    protected $twig;
-    /**
      * @var TwigTemplateLocator
      */
     protected $twigTemplateLocator;
+    /**
+     * @var TwigTemplateRenderer
+     */
+    protected $twigTemplateRenderer;
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
 
     /**
      * SyndicationLinkRenderer constructor.
      */
-    public function __construct(KernelInterface $kernel, Environment $twig, TwigTemplateLocator $twigTemplateLocator)
+    public function __construct(KernelInterface $kernel, TwigTemplateLocator $twigTemplateLocator, TwigTemplateRenderer $twigTemplateRenderer, EventDispatcherInterface $eventDispatcher)
     {
         $this->kernel = $kernel;
-        $this->twig = $twig;
         $this->twigTemplateLocator = $twigTemplateLocator;
+        $this->twigTemplateRenderer = $twigTemplateRenderer;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
      * Render all links in an provider.
      *
      * Options:
+     * - template: (string) The template to render the link provider. Default: syndication_provider_default
      * - rel: (string) Only render links with given relationship
-     * - disable_dev_comments: (bool) Disable dev html comments in dev mode
+     * - disable_dev_comments: (bool) Disable dev html comments in dev mode. Default: false
      * - prepend: (string) Will be prepended before the rendered links. Could be for example a headline or an open tag.
      * - append: (string) Will be appended after the rendered links. Could be for example a clearfix or an closing tag.
-     * - disable_indexer_comments: (bool) Disable indexer::stop and indexer::continue comments
-     * - linkTemplate: (string) The name on an twig templates that renders a single link. Default: syndication_link_default
+     * - linkTemplate: (string) The name of a twig templates that renders a single link. Default: syndication_link_default
      * - render_callback: (callable) A custom callback to render a single link instance. Default null
      */
     public function renderProvider(SyndicationLinkProvider $provider, array $options = []): string
     {
         $defaults = [
             'render_callback' => null,
+            'prepend' => '',
+            'append' => '',
+            'template' => 'syndication_provider_default',
+            'disable_dev_comments' => false,
         ];
         $options = array_merge($defaults, $options);
 
@@ -65,35 +77,46 @@ class SyndicationLinkRenderer
             $links = $provider->getLinks();
         }
 
-        foreach ($links as $link) {
-            if (\is_callable($options['render_callback'])) {
-                $result .= \call_user_func($options['render_callback'], $link, [
-                    'disable_dev_comments' => true,
-                    'template' => $options['linkTemplate'] ?? null,
-                ]);
+        $linkRenderOptions = array_intersect_key($options, ['disable_dev_comments' => false, 'linkTemplate' => null]);
+
+        if (isset($linkRenderOptions['linkTemplate'])) {
+            $linkRenderOptions['template'] = $linkRenderOptions['linkTemplate'];
+            unset($linkRenderOptions['linkTemplate']);
+        }
+
+        /** @var BeforeRenderSyndicationLinksEvent $event */
+        $event = $this->eventDispatcher->dispatch(BeforeRenderSyndicationLinksEvent::class, new BeforeRenderSyndicationLinksEvent($links, $provider, $linkRenderOptions, $options));
+
+        try {
+            $template = $this->twigTemplateLocator->getTemplatePath($options['template']);
+        } catch (TemplateNotFoundException $e) {
+            if ($this->kernel->isDebug()) {
+                throw $e;
+            }
+
+            if ($options['template'] !== $defaults['template']) {
+                trigger_error($e->getMessage(), E_USER_WARNING);
+                $template = $this->twigTemplateLocator->getTemplatePath($defaults['template']);
             } else {
-                $result .= $this->render($link, [
-                    'disable_dev_comments' => true,
-                    'template' => $options['linkTemplate'] ?? null,
-                ]);
+                throw $e;
             }
         }
 
-        if (isset($options['prepend']) && \is_string($options['prepend'])) {
-            $result = $options['prepend'].$result;
+        $renderedLinks = [];
+
+        foreach ($event->getLinks() as $link) {
+            if (\is_callable($options['render_callback'])) {
+                $renderedLinks[] = \call_user_func($options['render_callback'], $link, $event->getLinkRenderOptions());
+            } else {
+                $renderedLinks[] = $this->render($link, $event->getLinkRenderOptions());
+            }
         }
 
-        if (isset($options['append']) && \is_string($options['append'])) {
-            $result = $result.$options['append'];
-        }
-
-        if ($this->kernel->isDebug() && (!isset($options['disable_dev_comments']) || false === $options['disable_dev_comments'])) {
-            $result = "\n<!-- SYNDICATION LINKS -->\n$result\n<!-- END SYNDICATION LINKS -->\n";
-        }
-
-        if (!isset($options['disable_indexer_comments']) || true !== $options['disable_indexer_comments']) {
-            $result = "\n<!-- indexer::stop -->\n".$result."\n<!-- indexer::continue -->\n";
-        }
+        $result = $this->twigTemplateRenderer->render($template, [
+            'links' => $renderedLinks,
+            'prepend' => $options['prepend'],
+            'append' => $options['append'],
+        ], (new TwigTemplateRendererConfiguration())->setShowTemplateComments(!$options['disable_dev_comments']));
 
         return $result;
     }
@@ -109,6 +132,12 @@ class SyndicationLinkRenderer
      */
     public function render(SyndicationLink $link, array $options = []): string
     {
+        $defaults = [
+            'disable_dev_comments' => false,
+            'template' => 'syndication_link_default',
+        ];
+        $options = array_merge($defaults, $options);
+
         $attributes = $link->getAttributes();
 
         if (isset($options['attributes']) && \is_array($options['attributes'])) {
@@ -126,31 +155,32 @@ class SyndicationLinkRenderer
             $renderedAttributes .= $key.'="'.$value.'" ';
         }
 
-        $template = $this->twigTemplateLocator->getTemplatePath('syndication_link_default');
+        try {
+            $template = $this->twigTemplateLocator->getTemplatePath($options['template']);
+        } catch (TemplateNotFoundException $e) {
+            if ($this->kernel->isDebug()) {
+                throw $e;
+            }
 
-        if (isset($options['template']) && \is_string($options['template'])) {
-            try {
-                $template = $this->twigTemplateLocator->getTemplatePath($options['template']);
-            } catch (TemplateNotFoundException $e) {
-                if ($this->kernel->isDebug()) {
-                    throw $e;
-                }
+            if ($options['template'] !== $defaults['template']) {
                 trigger_error($e->getMessage(), E_USER_WARNING);
+                $template = $this->twigTemplateLocator->getTemplatePath($defaults['template']);
+            } else {
+                throw $e;
             }
         }
 
         $content = isset($options['content']) ? $options['content'] : $link->getContent();
 
-        $result = $this->twig->render($template, [
+        $result = $this->twigTemplateRenderer->render($template, [
             'attributes' => $attributes,
             'renderedAttributes' => $renderedAttributes,
             'content' => $content,
             'link' => $link,
-        ]);
-
-        if ($this->kernel->isDebug() && (!isset($options['disable_dev_comments']) || false === $options['disable_dev_comments'])) {
-            $result = "\n<!-- SYNDICATION LINK -->\n$result\n<!-- END SYNDICATION LINK -->\n";
-        }
+        ], (new TwigTemplateRendererConfiguration())
+            ->setShowTemplateComments(!$options['disable_dev_comments'])
+            ->setTemplatePath($template)
+        );
 
         return $result;
     }
