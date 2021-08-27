@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2021-08-27
+- Added: BeforeRenderSyndicationLinks to customize link list and link render options
+- Added: twig template for link provider
+- Changed: use TwigTemplateRenderer for rendering link templates
+- Removed: disable_indexer_comments option on SyndicationLinkRenderer::renderProvider() as it is now customizable from template
+
 ## [0.3.5] - 2021-08-26
 - Changed: allowed some symfony 5 packages
 - Fixed: hard reader bundle dependency
