@@ -1,4 +1,6 @@
 # Contao Syndication Type Bundle
+[![Latest Stable Version](https://img.shields.io/packagist/v/heimrichhannot/contao-syndication-type-bundle.svg)](https://packagist.org/packages/heimrichhannot/contao-syndication-type-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/heimrichhannot/contao-syndication-type-bundle.svg)](https://packagist.org/packages/heimrichhannot/contao-syndication-type-bundle)
 
 This bundle brings an extendable syndication framework to contao. Syndication can be easily added to your own bundle/module/element. There are already some bundles/entites supported out-of-the-box (see features section).
 
@@ -25,7 +27,10 @@ This bundle brings an extendable syndication framework to contao. Syndication ca
 ### Install
 
 1. Install with composer or contao manager
-1. Update database
+
+       composer require heimrichhannot/contao-syndication-type-bundle
+
+2. Update database
 
 ### Article syndication
 You can replace the contao article syndication with the syndication of this bundle.

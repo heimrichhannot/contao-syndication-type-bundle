@@ -1,0 +1,17 @@
+{% block before %}
+    <!-- indexer::stop -->
+    {{ prepend|default }}
+{% endblock %}
+
+{%- block links %}
+    {%- for link in links %}
+        {% block link %}
+        {{ link|raw }}
+        {% endblock %}
+    {% endfor -%}
+{% endblock %}
+
+{%- block after %}
+    {{ append|default }}
+    <!-- indexer::continue -->
+{% endblock %}

@@ -1,12 +1,12 @@
 {
   "name": "heimrichhannot/contao-syndication-type-bundle",
   "type": "contao-bundle",
-  "description": "This bundle contains a syndication config element type.",
+  "description": "This bundle brings an extendable syndication framework to contao.",
   "license": "LGPL-3.0-or-later",
   "require": {
     "php": "^7.2",
     "contao/core-bundle": "^4.4",
-    "heimrichhannot/contao-twig-support-bundle": "^0.2.15|^1.0",
+    "heimrichhannot/contao-twig-support-bundle": "^0.2.16|^1.0",
     "psr/container": "^1.0|^2.0",
     "psr/link": "^1.0",
     "symfony/config": "^3.4|^4.4|^5.0",
