@@ -107,6 +107,7 @@ You can customize all options by decorating the `SyndicationLinkRenderer` servic
 services:
   App\Syndication\DecoratedLinkRenderer:
     decorates: HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer
+    arguments: ['@App\Syndication\DecoratedLinkRenderer.inner']
 ```
 
 ```php

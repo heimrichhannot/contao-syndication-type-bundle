@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2021-12-15
+- Added: [BREAKING!] SyndicationLinkRendererContext parameter to SyndicationLinkRenderer::renderProvider()
+
 ## [0.4.0] - 2021-08-27
 - Added: BeforeRenderSyndicationLinks to customize link list and link render options
 - Added: twig template for link provider

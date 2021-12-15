@@ -58,7 +58,7 @@ class SyndicationLinkRenderer
      * - linkTemplate: (string) The name of a twig templates that renders a single link. Default: syndication_link_default
      * - render_callback: (callable) A custom callback to render a single link instance. Default null
      */
-    public function renderProvider(SyndicationLinkProvider $provider, array $options = []): string
+    public function renderProvider(SyndicationLinkProvider $provider, SyndicationLinkRendererContext $context, array $options = []): string
     {
         $defaults = [
             'render_callback' => null,
@@ -85,7 +85,7 @@ class SyndicationLinkRenderer
         }
 
         /** @var BeforeRenderSyndicationLinksEvent $event */
-        $event = $this->eventDispatcher->dispatch(BeforeRenderSyndicationLinksEvent::class, new BeforeRenderSyndicationLinksEvent($links, $provider, $linkRenderOptions, $options));
+        $event = $this->eventDispatcher->dispatch(BeforeRenderSyndicationLinksEvent::class, new BeforeRenderSyndicationLinksEvent($links, $provider, $linkRenderOptions, $options, $context));
 
         try {
             $template = $this->twigTemplateLocator->getTemplatePath($options['template']);

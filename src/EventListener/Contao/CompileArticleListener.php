@@ -13,6 +13,7 @@ use Contao\Module;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRendererContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\ExportSyndicationHandler;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -60,7 +61,15 @@ class CompileArticleListener
             $context = new SyndicationContext($module->title, $module->teaser, $this->requestStack->getMasterRequest()->getUri(), $template->getData(), $data);
 
             if (!$this->exportSyndicationHandler->willRunExportByContext($context)) {
-                $links = $this->linkRenderer->renderProvider($this->syndicationGenerator->generateFromContext($context));
+                $links = $this->linkRenderer->renderProvider(
+                    $this->syndicationGenerator->generateFromContext($context),
+                    new SyndicationLinkRendererContext(
+                        SyndicationLinkRendererContext::TYPE_ARTICLE,
+                        $module->getModel()->getTable(),
+                        $module->getModel()->id,
+                        ['template' => $template, 'data' => $data, 'module' => $module]
+                    )
+                );
                 $template->elements = array_merge([$links], $template->elements);
             }
         }

@@ -16,6 +16,7 @@ use HeimrichHannot\SyndicationTypeBundle\Dca\SyndicationTypeDcaProvider;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRendererContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\ExportSyndicationHandler;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -82,7 +83,14 @@ class SyndicationConfigElementType implements ConfigElementTypeInterface
         if (!$this->exportSyndicationHandler->willRunExportByContext($context)) {
             $links = $this->linkProviderGenerator->generateFromContext($context);
 
-            return new ConfigElementResult(ConfigElementResult::TYPE_FORMATTED_VALUE, $this->linkRenderer->renderProvider($links));
+            return new ConfigElementResult(ConfigElementResult::TYPE_FORMATTED_VALUE, $this->linkRenderer->renderProvider(
+                $links, new SyndicationLinkRendererContext(
+                    SyndicationLinkRendererContext::TYPE_READER_CONFIG_ELEMENT,
+                    $configElementData->getConfiguration()->getTable(),
+                    $configElementData->getConfiguration()->id,
+                    ['configElementData' => $configElementData]
+                )
+            ));
         }
 
         return new ConfigElementResult(ConfigElementResult::TYPE_NONE, null);

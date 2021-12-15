@@ -17,6 +17,7 @@ use HeimrichHannot\SyndicationTypeBundle\Event\BeforeSyndicationContentElementPa
 use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRendererContext;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -88,7 +89,14 @@ class SyndicationElement extends ContentElement
 
         if ($this->syndicationLinkRenderer && $this->syndicationLinkProviderGenerator) {
             $linkProvider = $this->syndicationLinkProviderGenerator->generateFromContext($context);
-            $syndication = $this->syndicationLinkRenderer->renderProvider($linkProvider);
+            $syndication = $this->syndicationLinkRenderer->renderProvider(
+                $linkProvider, new SyndicationLinkRendererContext(
+                    SyndicationLinkRendererContext::TYPE_CONTENT_ELEMENT,
+                    $this->getModel()->getTable(),
+                    $this->getModel()->id,
+                    ['model' => $this->getModel(), 'template' => $this->Template]
+                )
+            );
         }
 
         $this->Template->syndication = $syndication;
