@@ -16,6 +16,7 @@ use Eluceo\iCal\Component\Event;
 use Exception;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
+use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\AbstractExportSyndicationType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,14 +35,19 @@ class IcsExportSyndication extends AbstractExportSyndicationType
      * @var TranslatorInterface
      */
     protected $translator;
+    /**
+     * @var SyndicationLinkFactory
+     */
+    private $linkFactory;
 
     /**
      * IcalExportSyndication constructor.
      */
-    public function __construct(RequestStack $requestStack, TranslatorInterface $translator)
+    public function __construct(RequestStack $requestStack, TranslatorInterface $translator, SyndicationLinkFactory $linkFactory)
     {
         $this->requestStack = $requestStack;
         $this->translator = $translator;
+        $this->linkFactory = $linkFactory;
     }
 
     public static function getType(): string
@@ -61,14 +67,15 @@ class IcsExportSyndication extends AbstractExportSyndicationType
 
     public function generate(SyndicationContext $context): SyndicationLink
     {
-        return new SyndicationLink(
-            [static::REL_NOFOLLOW],
+        return $this->linkFactory->create(
+            [static::REL_ALTERNATE, static::REL_NOFOLLOW],
             $this->appendGetParameterToUrl($context->getUrl(), static::PARAM, (string) $context->getConfiguration()['id']),
             $this->translator->trans('huh.syndication_type.types.ical.title'),
             [
                 'class' => 'ics',
                 'title' => $this->translator->trans('huh.syndication_type.types.ical.title'),
-            ]
+            ],
+            $this
         );
     }
 
