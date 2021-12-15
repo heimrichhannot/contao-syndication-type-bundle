@@ -72,7 +72,7 @@ class IcsExportSyndication extends AbstractExportSyndicationType
             $this->appendGetParameterToUrl($context->getUrl(), static::PARAM, (string) $context->getConfiguration()['id']),
             $this->translator->trans('huh.syndication_type.types.ical.title'),
             [
-                'class' => 'ics',
+                'class' => '',
                 'title' => $this->translator->trans('huh.syndication_type.types.ical.title'),
             ],
             $this

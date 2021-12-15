@@ -46,7 +46,7 @@ class XingSyndicationType extends AbstractSyndicationType
             sprintf('https://www.xing.com/spi/shares/new?url=%s', rawurlencode($context->getUrl())),
             $this->translator->trans('huh.syndication_type.types.xing.title'),
             [
-                'class' => 'xing',
+                'class' => '',
                 'target' => '_blank',
                 'onclick' => 'window.open(this.href,\'\',\'width=500,height=260,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false',
             ],

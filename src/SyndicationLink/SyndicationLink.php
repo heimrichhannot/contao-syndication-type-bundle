@@ -28,16 +28,29 @@ class SyndicationLink implements LinkInterface
      * @var string
      */
     protected $content;
+    /**
+     * @var string
+     */
+    private $type;
 
     /**
      * SyndicationLink constructor.
      */
-    public function __construct(array $rels, string $href, string $content, array $attributes)
+    public function __construct(string $type, array $rels, string $href, string $content, array $attributes)
     {
         $this->rels = $rels;
         $this->href = $href;
         $this->content = $content;
         $this->attributes = $attributes;
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     public function getHref()

@@ -62,7 +62,7 @@ class EmailSyndicationType extends AbstractSyndicationType
             $href,
             $this->translator->trans('huh.syndication_type.types.email.title'),
             [
-                'class' => 'email mail',
+                'class' => 'mail',
                 'title' => $this->translator->trans('huh.syndication_type.types.email.title'),
             ],
             $this

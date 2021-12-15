@@ -29,6 +29,8 @@ class SyndicationLinkFactory
             $rels[] = $type::getType();
         }
 
-        return new SyndicationLink($rels, $href, $content, $attributes);
+        $attributes['class'] = trim(($attributes['class'] ?? '').' '.$type::getType());
+
+        return new SyndicationLink($type::getType(), $rels, $href, $content, $attributes);
     }
 }

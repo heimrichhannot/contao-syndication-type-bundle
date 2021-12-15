@@ -104,11 +104,12 @@ class SyndicationLinkRenderer
 
         $renderedLinks = [];
 
+        /** @var SyndicationLink $link */
         foreach ($event->getLinks() as $link) {
             if (\is_callable($options['render_callback'])) {
-                $renderedLinks[] = \call_user_func($options['render_callback'], $link, $event->getLinkRenderOptions());
+                $renderedLinks[$link->getType()] = \call_user_func($options['render_callback'], $link, $event->getLinkRenderOptions());
             } else {
-                $renderedLinks[] = $this->render($link, $event->getLinkRenderOptions());
+                $renderedLinks[$link->getType()] = $this->render($link, $event->getLinkRenderOptions());
             }
         }
 

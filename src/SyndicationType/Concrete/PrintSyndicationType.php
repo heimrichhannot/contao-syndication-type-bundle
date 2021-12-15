@@ -67,7 +67,7 @@ class PrintSyndicationType extends AbstractExportSyndicationType implements Serv
     public function generate(SyndicationContext $context): SyndicationLink
     {
         $attributes = [
-            'class' => 'print',
+            'class' => '',
         ];
         $href = 'javascript:void(0);';
 

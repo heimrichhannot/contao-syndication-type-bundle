@@ -46,7 +46,7 @@ class WhatsAppSyndicationType extends AbstractSyndicationType
             'https://wa.me/?text='.rawurlencode($context->getTitle()." \r\n".$context->getUrl()),
             $this->translator->trans('huh.syndication_type.types.whatsapp.title'),
             [
-                'class' => 'whatsapp',
+                'class' => '',
                 'title' => $this->translator->trans('huh.syndication_type.types.whatsapp.title'),
                 'data-action' => 'share/whatsapp/share',
             ],

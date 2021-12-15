@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [0.5.0] - 2021-12-15
 - Added: [BREAKING!] SyndicationLinkRendererContext parameter to SyndicationLinkRenderer::renderProvider()
+- Added: [BREAKING!] SyndicationLink type property
 - Fixed: IcsExportSyndication not using SyndicationLinkFactory
 
 ## [0.4.0] - 2021-08-27

@@ -46,7 +46,7 @@ class FacebookSyndicationType extends AbstractSyndicationType
             sprintf('https://www.facebook.com/sharer/sharer.php?u=%s&t=%s', rawurlencode($context->getUrl()), rawurlencode($context->getTitle())),
             $this->translator->trans('huh.syndication_type.types.facebook.title'),
             [
-                'class' => 'facebook',
+                'class' => '',
                 'title' => $this->translator->trans('huh.syndication_type.types.facebook.title'),
                 'target' => '_blank',
                 'onclick' => 'window.open(this.href,\'\',\'width=640,height=380,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false',
