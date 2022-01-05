@@ -129,7 +129,7 @@ class SyndicationLinkRenderer
      * - attributes: (array) Set addition attributes. Existing attributes will be overridden (array_merge used)
      * - content: (string) Override the default content set in link element
      * - disable_dev_comments: (bool) Disable dev html comments in dev mode
-     * - template: (string) The name on an twig templates that renders a single link. Default: syndication_link_default
+     * - template: (string) The name on a twig templates that renders a single link. Default: syndication_link_default
      */
     public function render(SyndicationLink $link, array $options = []): string
     {

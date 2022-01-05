@@ -35,14 +35,14 @@ This bundle brings an extendable syndication framework to contao. Syndication ca
 ### Article syndication
 You can replace the contao article syndication with the syndication of this bundle.
 
-1. Set `huh_syndication_type.enable_article_syndication` to true
+1. Set `huh_syndication_type.enable_article_syndication` to true (in your project config.yml)
 1. Clear your cache and update the database
 1. You'll find the new syndication config in your article configuration
 
 ### Content element syndication
 You can add syndication as a content Element to every article.
 
-1. Set `huh_syndication_type.enable_content_syndication` to true
+1. Set `huh_syndication_type.enable_content_syndication` to true (in your project config.yml)
 1. Clear your cache and update the database
 1. You'll find the new syndication type in content element type selection
 

@@ -48,6 +48,7 @@ class LinkedInSyndicationType extends AbstractSyndicationType
             [
                 'class' => 'linked-in',
                 'target' => '_blank',
+                'title' => $this->translator->trans('huh.syndication_type.types.linked_in.title'),
                 'onclick' => 'window.open(this.href,\'\',\'width=500,height=260,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false',
             ],
             $this
