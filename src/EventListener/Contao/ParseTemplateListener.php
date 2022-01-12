@@ -61,8 +61,8 @@ class ParseTemplateListener
             // HOOK: add custom parse filters
             if (isset($GLOBALS['TL_HOOKS']['parseFrontendTemplate']) && \is_array($GLOBALS['TL_HOOKS']['parseFrontendTemplate'])) {
                 foreach ($GLOBALS['TL_HOOKS']['parseFrontendTemplate'] as $callback) {
-                    System::importStatic($callback[0]);
-                    $buffer = $this->{$callback[0]}->{$callback[1]}($buffer, $template->getName());
+                    $instance = System::importStatic($callback[0]);
+                    $buffer = $instance->{$callback[1]}($buffer, $template->getName());
                 }
             }
 
