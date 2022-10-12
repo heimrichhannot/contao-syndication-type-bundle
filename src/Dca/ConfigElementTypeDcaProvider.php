@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -9,7 +9,7 @@
 namespace HeimrichHannot\SyndicationTypeBundle\Dca;
 
 use HeimrichHannot\SyndicationTypeBundle\EventListener\Dca\FieldOptionsCallbackListener;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConfigElementTypeDcaProvider extends AbstractDcaProvider
 {

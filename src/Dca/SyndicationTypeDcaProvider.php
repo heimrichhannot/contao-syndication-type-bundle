@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -15,7 +15,7 @@ use HeimrichHannot\SyndicationTypeBundle\EventListener\Dca\FieldOptionsCallbackL
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection;
 use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SyndicationTypeDcaProvider extends AbstractDcaProvider
 {

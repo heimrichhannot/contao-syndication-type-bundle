@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -12,7 +12,7 @@ use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLink;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkFactory;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\AbstractSyndicationType;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class XingSyndicationType extends AbstractSyndicationType
 {
