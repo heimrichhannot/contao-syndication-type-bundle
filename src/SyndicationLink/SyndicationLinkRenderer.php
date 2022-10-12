@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -85,7 +85,7 @@ class SyndicationLinkRenderer
         }
 
         /** @var BeforeRenderSyndicationLinksEvent $event */
-        $event = $this->eventDispatcher->dispatch(BeforeRenderSyndicationLinksEvent::class, new BeforeRenderSyndicationLinksEvent($links, $provider, $linkRenderOptions, $options, $context));
+        $event = $this->eventDispatcher->dispatch(new BeforeRenderSyndicationLinksEvent($links, $provider, $linkRenderOptions, $options, $context), BeforeRenderSyndicationLinksEvent::class);
 
         try {
             $template = $this->twigTemplateLocator->getTemplatePath($options['template']);
@@ -95,7 +95,7 @@ class SyndicationLinkRenderer
             }
 
             if ($options['template'] !== $defaults['template']) {
-                trigger_error($e->getMessage(), E_USER_WARNING);
+                trigger_error($e->getMessage(), \E_USER_WARNING);
                 $template = $this->twigTemplateLocator->getTemplatePath($defaults['template']);
             } else {
                 throw $e;
@@ -164,7 +164,7 @@ class SyndicationLinkRenderer
             }
 
             if ($options['template'] !== $defaults['template']) {
-                trigger_error($e->getMessage(), E_USER_WARNING);
+                trigger_error($e->getMessage(), \E_USER_WARNING);
                 $template = $this->twigTemplateLocator->getTemplatePath($defaults['template']);
             } else {
                 throw $e;
