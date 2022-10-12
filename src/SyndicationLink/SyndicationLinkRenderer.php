@@ -57,6 +57,9 @@ class SyndicationLinkRenderer
      * - append: (string) Will be appended after the rendered links. Could be for example a clearfix or an closing tag.
      * - linkTemplate: (string) The name of a twig templates that renders a single link. Default: syndication_link_default
      * - render_callback: (callable) A custom callback to render a single link instance. Default null
+     *
+     * Render Callback:
+     * function (SyndicationLink $link, array $linkRenderOptions): string
      */
     public function renderProvider(SyndicationLinkProvider $provider, SyndicationLinkRendererContext $context, array $options = []): string
     {
@@ -85,7 +88,10 @@ class SyndicationLinkRenderer
         }
 
         /** @var BeforeRenderSyndicationLinksEvent $event */
-        $event = $this->eventDispatcher->dispatch(new BeforeRenderSyndicationLinksEvent($links, $provider, $linkRenderOptions, $options, $context), BeforeRenderSyndicationLinksEvent::class);
+        $event = $this->eventDispatcher->dispatch(
+            new BeforeRenderSyndicationLinksEvent($links, $provider, $linkRenderOptions, $options, $context),
+            BeforeRenderSyndicationLinksEvent::class
+        );
 
         try {
             $template = $this->twigTemplateLocator->getTemplatePath($options['template']);
