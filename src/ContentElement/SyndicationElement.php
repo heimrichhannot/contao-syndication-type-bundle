@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -80,10 +80,8 @@ class SyndicationElement extends ContentElement
         $data = $this->Template->getData();
         $configuration = $this->getModel()->row();
 
-        /** @noinspection PhpMethodParametersCountMismatchInspection */
-        /** @noinspection PhpParamsInspection */
         /** @var BeforeSyndicationContentElementParseEvent $event */
-        $event = $this->eventDispatcher->dispatch(BeforeSyndicationContentElementParseEvent::NAME, new BeforeSyndicationContentElementParseEvent($title, $content, $url, $data, $configuration));
+        $event = $this->eventDispatcher->dispatch(new BeforeSyndicationContentElementParseEvent($title, $content, $url, $data, $configuration), BeforeSyndicationContentElementParseEvent::NAME);
 
         $context = new SyndicationContext($event->getTitle(), $event->getContent(), $event->getUrl(), $event->getData(), $event->getConfiguration());
 

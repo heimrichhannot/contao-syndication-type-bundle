@@ -1,13 +1,14 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\SyndicationTypeBundle\SyndicationLink;
 
+use Psr\Link\LinkInterface;
 use Psr\Link\LinkProviderInterface;
 
 class SyndicationLinkProvider implements LinkProviderInterface
@@ -15,12 +16,12 @@ class SyndicationLinkProvider implements LinkProviderInterface
     /**
      * @var SyndicationLink[]
      */
-    protected $links;
+    protected array $links;
 
     /**
      * SyndicationLinkProvider constructor.
      *
-     * @param SyndicationLink[]
+     * @param SyndicationLink[] $links
      */
     public function __construct(array $links)
     {
@@ -28,14 +29,14 @@ class SyndicationLinkProvider implements LinkProviderInterface
     }
 
     /**
-     * @return array|SyndicationLink[]|\Psr\Link\LinkInterface[]|\Traversable
+     * @return array|SyndicationLink[]|LinkInterface[]|\Traversable|iterable
      */
-    public function getLinks()
+    public function getLinks(): iterable
     {
         return $this->links;
     }
 
-    public function getLinksByRel($rel)
+    public function getLinksByRel($rel): iterable
     {
         $results = [];
 

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -10,7 +10,7 @@ namespace HeimrichHannot\SyndicationTypeBundle\Event;
 
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProvider;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRendererContext;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class BeforeRenderSyndicationLinksEvent extends Event
 {
@@ -74,13 +74,8 @@ class BeforeRenderSyndicationLinksEvent extends Event
         return $this->providerRendererOptions;
     }
 
-    /**
-     * @return SyndicationLinkRendererContext
-     */
     public function getRendererContext(): SyndicationLinkRendererContext
     {
         return $this->rendererContext;
     }
-
-
 }

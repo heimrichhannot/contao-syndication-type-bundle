@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -57,6 +57,9 @@ class SyndicationLinkRenderer
      * - append: (string) Will be appended after the rendered links. Could be for example a clearfix or an closing tag.
      * - linkTemplate: (string) The name of a twig templates that renders a single link. Default: syndication_link_default
      * - render_callback: (callable) A custom callback to render a single link instance. Default null
+     *
+     * Render Callback:
+     * function (SyndicationLink $link, array $linkRenderOptions): string
      */
     public function renderProvider(SyndicationLinkProvider $provider, SyndicationLinkRendererContext $context, array $options = []): string
     {
@@ -85,7 +88,10 @@ class SyndicationLinkRenderer
         }
 
         /** @var BeforeRenderSyndicationLinksEvent $event */
-        $event = $this->eventDispatcher->dispatch(BeforeRenderSyndicationLinksEvent::class, new BeforeRenderSyndicationLinksEvent($links, $provider, $linkRenderOptions, $options, $context));
+        $event = $this->eventDispatcher->dispatch(
+            new BeforeRenderSyndicationLinksEvent($links, $provider, $linkRenderOptions, $options, $context),
+            BeforeRenderSyndicationLinksEvent::class
+        );
 
         try {
             $template = $this->twigTemplateLocator->getTemplatePath($options['template']);
@@ -95,7 +101,7 @@ class SyndicationLinkRenderer
             }
 
             if ($options['template'] !== $defaults['template']) {
-                trigger_error($e->getMessage(), E_USER_WARNING);
+                trigger_error($e->getMessage(), \E_USER_WARNING);
                 $template = $this->twigTemplateLocator->getTemplatePath($defaults['template']);
             } else {
                 throw $e;
@@ -164,7 +170,7 @@ class SyndicationLinkRenderer
             }
 
             if ($options['template'] !== $defaults['template']) {
-                trigger_error($e->getMessage(), E_USER_WARNING);
+                trigger_error($e->getMessage(), \E_USER_WARNING);
                 $template = $this->twigTemplateLocator->getTemplatePath($defaults['template']);
             } else {
                 throw $e;

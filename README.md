@@ -176,36 +176,56 @@ Syndication bundle is build to be reused. You can easily add it to your code.
     - create an instance of `SyndicationContext`
     - generate syndication links with `SyndicationLinkProviderGenerator::generateFromContext()` (will return a `SyndicationLinkProvider` instance, which is a collection of `SyndicationLink` instances)
     - render the syndication links with `SyndicationLinkRenderer::renderProvider()` (will return the rendered links as string. You could also use/create a custom link renderer)
+   
+    For easy of implementation you can access all of these services through `SyndicationManager`.
 
-        ```php
-        use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
-        use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkProviderGenerator;
-        use HeimrichHannot\SyndicationTypeBundle\SyndicationLink\SyndicationLinkRenderer;
-        
-        function addSyndication(array $data, array $configuration, string $url, SyndicationLinkProviderGenerator $linkProviderGenerator, SyndicationLinkRenderer $linkRenderer): string
+    ```php
+    use HeimrichHannot\SyndicationTypeBundle\Manager\SyndicationManager;
+    
+    class ExampleController {
+    
+        private SyndicationManager               $syndicationManager;
+    
+        public function addSyndication(string $title, string $content, array $itemData, ExampleModel $config): string
         {
-        
-            $context = new SyndicationContext($data['title'], $data['text'], $url, $data, $configuration);
-            $linkProviderGenerator = $linkProviderGenerator->generateFromContext($context);
-            return $linkRenderer->renderProvider($linkProviderGenerator);
+            // $title: A title for the syndication
+            // $content: What should be shared. Can be a teaser text or a rendered template.
+            // $itemData: The data of the entity to share
+            // $config: The configuration. Typical the model data (row) of the configuration. Maybe the same as item data.
+            $context = $this->syndicationManager->createContext($title, $content, $itemData, $config->row());
+            
+            // See next paragraph
+            $this->doExport($context);
+            
+            $provider = $this->syndicationManager->getLinkProviderGenerator()->generateFromContext($context);
+            $rendererContext = $this->syndicationManager->createLinkRendererContextFromModel();
+            
+            return $this->syndicationManager->getLinkRenderer()->renderProvider($provider, $rendererContext);
         }
-        ```
+    
+    }
+    ```
 
 1. Add export support.
     - this should be done, where your content to export is completely configured and fully rendered (or can be fully rendered). In the most cases, this can be done where you generate the syndication links, but maybe it must be done on a later point.
     - create a `SyndicationContext` instance
-    - run `ExportSyndicationHandler::exportByContext()`
+- run `ExportSyndicationHandler::exportByContext()`
 
-        ```php
-        use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
-        use HeimrichHannot\SyndicationTypeBundle\SyndicationType\ExportSyndicationHandler;
+    ```php
+    use HeimrichHannot\SyndicationTypeBundle\Manager\SyndicationManager;
+    use HeimrichHannot\SyndicationTypeBundle\SyndicationContext\SyndicationContext;
         
-        function doExport(ExportSyndicationHandler $exportSyndicationHandler, string $title, string $buffer, string $url, array $data, array $configuration)
+    class ExampleController {
+    
+        private SyndicationManager               $syndicationManager;
+        
+        private function doExport(SyndicationContext $syndicationContext): void
         {
-            $context = new SyndicationContext($title, $buffer, $url, $data, $configuration);
-            $exportSyndicationHandler->exportByContext($context); 
+            $this->syndicationManager->getExportSyndicationHandler()->exportByContext($context);
         }
-        ```
+        
+    }
+    ```
 
 ### Add custom syndication type
 

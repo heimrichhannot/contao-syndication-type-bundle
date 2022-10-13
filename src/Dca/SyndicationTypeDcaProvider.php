@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -15,7 +15,7 @@ use HeimrichHannot\SyndicationTypeBundle\EventListener\Dca\FieldOptionsCallbackL
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\SyndicationTypeCollection;
 use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SyndicationTypeDcaProvider extends AbstractDcaProvider
 {
@@ -86,10 +86,8 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
         }
         $subpalettes = array_merge($subpalettes, $this->getTypeSubpalettes());
 
-        /** @noinspection PhpMethodParametersCountMismatchInspection */
-        /** @noinspection PhpParamsInspection */
         /** @var AddSyndicationTypeSubpalettesEvent $event */
-        $event = $this->eventDispatcher->dispatch(AddSyndicationTypeSubpalettesEvent::class, new AddSyndicationTypeSubpalettesEvent($subpalettes));
+        $event = $this->eventDispatcher->dispatch(new AddSyndicationTypeSubpalettesEvent($subpalettes), AddSyndicationTypeSubpalettesEvent::class);
 
         return $event->getSubpalettes();
     }
@@ -133,10 +131,8 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
         $selectors[] = 'synIcsAddTime';
         $selectors[] = 'synUsePrintTemplate';
 
-        /** @noinspection PhpMethodParametersCountMismatchInspection */
-        /** @noinspection PhpParamsInspection */
         /** @var AddSyndicationTypePaletteSelectorsEvent $event */
-        $event = $this->eventDispatcher->dispatch(AddSyndicationTypePaletteSelectorsEvent::class, new AddSyndicationTypePaletteSelectorsEvent());
+        $event = $this->eventDispatcher->dispatch(new AddSyndicationTypePaletteSelectorsEvent(), AddSyndicationTypePaletteSelectorsEvent::class);
 
         return array_merge($selectors, $event->getSelectors());
     }
@@ -160,10 +156,8 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
 
         $fields = array_merge($fields, $this->getConfigurationFields());
 
-        /** @noinspection PhpMethodParametersCountMismatchInspection */
-        /** @noinspection PhpParamsInspection */
         /** @var AddSyndicationTypeFieldsEvent $event */
-        $event = $this->eventDispatcher->dispatch(AddSyndicationTypeFieldsEvent::class, new AddSyndicationTypeFieldsEvent($fields, $this));
+        $event = $this->eventDispatcher->dispatch(new AddSyndicationTypeFieldsEvent($fields, $this), AddSyndicationTypeFieldsEvent::class);
 
         return array_merge($event->getFields());
     }

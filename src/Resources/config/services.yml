@@ -18,7 +18,7 @@ services:
     public: true
 
   HeimrichHannot\SyndicationTypeBundle\:
-    resource: '../../{Dca,ExportSyndication}/*'
+    resource: '../../{Dca,ExportSyndication,Manager}/*'
     public: true
 
   HeimrichHannot\SyndicationTypeBundle\DataContainer\:
