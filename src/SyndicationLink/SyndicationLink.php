@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -12,26 +12,11 @@ use Psr\Link\LinkInterface;
 
 class SyndicationLink implements LinkInterface
 {
-    /**
-     * @var array
-     */
-    protected $rels;
-    /**
-     * @var string
-     */
-    protected $href;
-    /**
-     * @var array
-     */
-    protected $attributes;
-    /**
-     * @var string
-     */
-    protected $content;
-    /**
-     * @var string
-     */
-    private $type;
+    protected array $rels;
+    protected string $href;
+    protected array $attributes;
+    protected string $content;
+    private string $type;
 
     /**
      * SyndicationLink constructor.
@@ -45,30 +30,27 @@ class SyndicationLink implements LinkInterface
         $this->type = $type;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
-    public function getHref()
+    public function getHref(): string
     {
         return $this->href;
     }
 
-    public function isTemplated()
+    public function isTemplated(): bool
     {
         return false;
     }
 
-    public function getRels()
+    public function getRels(): array
     {
         return $this->rels;
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }

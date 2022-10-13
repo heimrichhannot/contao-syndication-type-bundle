@@ -8,10 +8,10 @@
     "contao/core-bundle": "^4.9",
     "heimrichhannot/contao-twig-support-bundle": "^0.2.16 || ^1.0",
     "psr/container": "^1.0 || ^2.0",
-    "psr/link": "^1.0",
-    "symfony/config": "^3.4|^4.4|^5.0",
+    "psr/link": "^1.0 || ^2.0",
+    "symfony/config": "^4.4 || ^5.0",
     "symfony/event-dispatcher-contracts": "^1.0 || ^2.0 || ^3.0",
-    "symfony/http-foundation": "^3.4|^4.4|^5.0",
+    "symfony/http-foundation": "^4.4 || ^5.0",
     "symfony/string": "^5.0",
     "symfony/translation-contracts": "^1.0 || ^2.0 || ^3.0"
   },
