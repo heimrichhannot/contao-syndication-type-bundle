@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.3] - 2022-10-13
+- Added: SyndicationManager to reduce number of services to inject
+- Added: support for symfony 5 / contao 4.13
+- Changed: allow php 8, dropped support for php <7.4
+- Changed dropped support for contao <4.9
+
 ## [0.5.2] - 2022-01-07
 - Fixed: Hook call in article export
 
