@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.4] - 2022-06-06
+- Fixed: import event class 
+
 ## [0.5.3] - 2022-10-13
 - Added: SyndicationManager to reduce number of services to inject
 - Added: support for symfony 5 / contao 4.13

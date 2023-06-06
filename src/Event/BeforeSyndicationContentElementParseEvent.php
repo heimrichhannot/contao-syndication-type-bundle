@@ -8,7 +8,7 @@
 
 namespace HeimrichHannot\SyndicationTypeBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class BeforeSyndicationContentElementParseEvent extends Event
 {
