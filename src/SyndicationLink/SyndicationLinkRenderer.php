@@ -152,7 +152,7 @@ class SyndicationLinkRenderer
         }
 
         $attributes['href'] = $link->getHref();
-        $attributes['rel'] = array_unique($link->getRels());
+        $attributes['rel'] = implode(' ',array_unique($link->getRels()));
 
         $attributes['class'] = trim('syndication-link '.($attributes['class'] ?: ''));
 
