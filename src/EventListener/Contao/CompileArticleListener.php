@@ -58,7 +58,7 @@ class CompileArticleListener
     public function __invoke(FrontendTemplate $template, array $data, Module $module): void
     {
         if (isset($this->bundleConfig['enable_article_syndication']) && true === $this->bundleConfig['enable_article_syndication']) {
-            $context = new SyndicationContext($module->title, $module->teaser, $this->requestStack->getMasterRequest()->getUri(), $template->getData(), $data);
+            $context = new SyndicationContext($module->title, (string) $module->teaser, $this->requestStack->getMasterRequest()->getUri(), $template->getData(), $data);
 
             if (!$this->exportSyndicationHandler->willRunExportByContext($context)) {
                 $links = $this->linkRenderer->renderProvider(
