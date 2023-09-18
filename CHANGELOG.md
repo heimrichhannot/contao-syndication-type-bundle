@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.6] - 2023-09-18
+- Fixed: Argument exception ([#4], [@iSteuding])
+
 ## [0.5.5] - 2022-06-08
 - Fixed: preparing rel attribute
 - 
@@ -81,3 +84,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [0.1.0] - 2021-03-09
 Initial release
+
+[@iSteuding]: https://github.com/iSteuding
+[#4]: https://github.com/heimrichhannot/contao-syndication-type-bundle/pull/4
