@@ -66,7 +66,7 @@ class ParseTemplateListener
                 }
             }
 
-            $context = new SyndicationContext($template->title, $buffer, $this->requestStack->getMasterRequest()->getUri(), $template->getData(), $template->getData());
+            $context = new SyndicationContext((string) $template->title, $buffer, $this->requestStack->getMasterRequest()->getUri(), $template->getData(), $template->getData());
             $this->exportSyndicationHandler->exportByContext($context);
         }
     }
