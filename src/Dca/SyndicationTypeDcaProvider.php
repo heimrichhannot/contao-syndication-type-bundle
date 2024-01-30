@@ -46,8 +46,6 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
 
     public function prepareDca(string $table): void
     {
-        $dca = &$GLOBALS['TL_DCA'][$table];
-
         $selectors = [];
         $subpalettes = [];
         $activationFields = [];
@@ -62,9 +60,11 @@ class SyndicationTypeDcaProvider extends AbstractDcaProvider
             }
         }
 
-        $dca['fields'] = array_merge($dca['fields'] ?: [], $activationFields, $this->getFields(true));
-        $dca['subpalettes'] = array_merge($dca['subpalettes'] ?: [], $subpalettes, $this->getSubpalettes($subpalettes));
-        $dca['palettes']['__selector__'] = array_merge($dca['palettes']['__selector__'] ?: [], $selectors, $this->getPalettesSelectors(true));
+        if (null !== $dca = &$GLOBALS['TL_DCA'][$table]) {
+            $dca['fields'] = array_merge($dca['fields'] ?: [], $activationFields, $this->getFields(true));
+            $dca['subpalettes'] = array_merge($dca['subpalettes'] ?: [], $subpalettes, $this->getSubpalettes($subpalettes));
+            $dca['palettes']['__selector__'] = array_merge($dca['palettes']['__selector__'] ?: [], $selectors, $this->getPalettesSelectors(true));
+        }
 
         $this->addTranslations($table);
     }

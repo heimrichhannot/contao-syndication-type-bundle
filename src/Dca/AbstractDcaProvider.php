@@ -12,11 +12,11 @@ abstract class AbstractDcaProvider
 {
     public function prepareDca(string $table): void
     {
-        $dca = &$GLOBALS['TL_DCA'][$table];
-
-        $dca['fields'] = array_merge($dca['fields'] ?: [], $this->getFields());
-        $dca['subpalettes'] = array_merge($dca['subpalettes'] ?: [], $this->getSubpalettes());
-        $dca['palettes']['__selector__'] = array_merge($dca['palettes']['__selector__'] ?: [], $this->getPalettesSelectors());
+        if (null !== $dca = &$GLOBALS['TL_DCA'][$table]) {
+            $dca['fields'] = array_merge($dca['fields'] ?: [], $this->getFields());
+            $dca['subpalettes'] = array_merge($dca['subpalettes'] ?: [], $this->getSubpalettes());
+            $dca['palettes']['__selector__'] = array_merge($dca['palettes']['__selector__'] ?: [], $this->getPalettesSelectors());
+        }
     }
 
     /**
