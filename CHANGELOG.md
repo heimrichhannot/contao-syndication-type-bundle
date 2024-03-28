@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.9] - 2024-03-28
+- Changed: request at least php 8.1
+- Changed: some code cleanup
+- Fixed: reader bundle integration
+
 ## [0.5.8] - 2024-01-30
 - Fixed: PHP8 access null object
 
