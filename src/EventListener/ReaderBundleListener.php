@@ -1,12 +1,6 @@
 <?php
 
-/*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
- *
- * @license LGPL-3.0-or-later
- */
-
-namespace HeimrichHannot\SyndicationTypeBundle\EventSubscriber;
+namespace HeimrichHannot\SyndicationTypeBundle\EventListener;
 
 use HeimrichHannot\ReaderBundle\Event\ReaderBeforeRenderEvent;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
@@ -14,39 +8,19 @@ use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use HeimrichHannot\SyndicationTypeBundle\ConfigElementType\SyndicationConfigElementType;
 use HeimrichHannot\SyndicationTypeBundle\SyndicationType\ExportSyndicationHandler;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
-class ReaderBeforeRenderEventSubscriber extends AbstractServiceSubscriber implements EventSubscriberInterface
+class ReaderBundleListener implements ServiceSubscriberInterface
 {
-    /**
-     * @var ExportSyndicationHandler
-     */
-    protected $exportSyndicationHandler;
-    /**
-     * @var ReaderConfigElementRegistry
-     */
-    protected $configElementRegistry;
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
-     * ReaderBeforeRenderEventSubscriber constructor.
-     */
-    public function __construct(ContainerInterface $container, ExportSyndicationHandler $exportSyndicationHandler)
+    public function __construct(
+        private ContainerInterface $container,
+        private ExportSyndicationHandler $exportSyndicationHandler,
+    )
     {
-        $this->exportSyndicationHandler = $exportSyndicationHandler;
-        $this->container = $container;
     }
 
-    public static function getSubscribedEvents()
-    {
-        return [
-            'huh.reader.event.reader_before_render' => 'onReaderBeforeRender',
-        ];
-    }
-
+    #[AsEventListener('huh.reader.event.reader_before_render')]
     public function onReaderBeforeRender(ReaderBeforeRenderEvent $event): void
     {
         if (!$this->container->has('HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry')) {
@@ -81,7 +55,7 @@ class ReaderBeforeRenderEventSubscriber extends AbstractServiceSubscriber implem
         }
     }
 
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         return [
             '?HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry',

@@ -18,15 +18,8 @@ services:
     public: true
 
   HeimrichHannot\SyndicationTypeBundle\:
-    resource: '../../{Dca,ExportSyndication,Manager}/*'
-    public: true
-
-  HeimrichHannot\SyndicationTypeBundle\DataContainer\:
-    resource: '../../DataContainer/*'
-    public: true
-
-  HeimrichHannot\SyndicationTypeBundle\EventListener\Contao\:
-    resource: '../../EventListener/Contao/*'
+    resource: '../../{DataContainer,Dca,EventListener,ExportSyndication,Manager}/*'
+    autoconfigure: true
     public: true
 
   HeimrichHannot\SyndicationTypeBundle\EventListener\Dca\FieldOptionsCallbackListener:
